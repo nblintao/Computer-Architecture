@@ -1,12 +1,13 @@
 `timescale 1ns / 1ps
 
-module alu( input  [31: 0] A,
-			input  [31: 0] B,
-			input  [ 2: 0] ALU_operation,
-			output [31: 0] res,
-			output zero,
-			output overflow
-			);
+module alu(A,B,ALU_operation,res,zero,overflow);
+	 input  [31: 0] A;
+	 input  [31: 0] B;
+	 input  [ 2: 0] ALU_operation;
+	 output [31:0] res;
+	 output zero;
+	 output overflow;
+	 
     reg [31: 0] res;
     wire [31: 0] res_and, res_or, res_add, res_sub, res_nor, res_slt, res_xor, res_srl;
     parameter one = 32'h0000_0001, zero_0 = 32'h0;
