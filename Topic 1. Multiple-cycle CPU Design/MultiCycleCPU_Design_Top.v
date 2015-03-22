@@ -6,13 +6,18 @@ module Top_Muliti_IOBUS(
                         SW,
                         LED,
                         SEGMENT,
-                        AN_SEL
+                        AN_SEL,
+								LCDRS, LCDRW, LCDE,
+								LCDDAT,LED
                         );
     input clk_50mhz;
     input  [ 4: 0] BTN;
     input  [ 7: 0] SW;
     output [ 7: 0] LED, SEGMENT;
     output [ 3: 0] AN_SEL;
+	 output LCDRS, LCDRW, LCDE;
+	 output [3:0] LCDDAT;
+	 
     wire Clk_CPU, rst, clk_m, mem_w, data_ram_we, GPIOf0000000_we, GPIOe0000000_we, counter_we;
     wire counter_OUT0, counter_OUT1, counter_OUT2;
     wire   [ 1: 0] Counter_set;
@@ -27,7 +32,6 @@ module Top_Muliti_IOBUS(
     wire MIO_ready;
     wire CPU_MIO;
 
-
     assign MIO_ready = ~button_out[1];
     assign rst = button_out[3];
 
@@ -37,6 +41,31 @@ module Top_Muliti_IOBUS(
     assign rom_addr = pc[11:2];
     assign AN_SEL = digit_anode;
     assign clk_io = ~Clk_CPU;
+	 
+	 // copy from test
+	 wire [3:0] lcdd;
+	 wire rslcd, rwlcd, elcd;
+	 wire debpb0;
+
+	 reg [255:0]strdata = "0123456789abcdefHello world!0000";
+
+	 assign LCDDAT[3]=lcdd[3];
+	 assign LCDDAT[2]=lcdd[2];
+	 assign LCDDAT[1]=lcdd[1];
+	 assign LCDDAT[0]=lcdd[0];
+
+	 assign LCDRS=rslcd;
+	 assign LCDRW=rwlcd;
+	 assign LCDE=elcd;
+
+	 display 		  	  display_dev(
+										  .CCLK(clk_50mhz),
+										  .reset(rst),
+										  .strdata(strdata),
+										  .rslcd(rslcd),
+										  .rwlcd(rwlcd),
+										  .elcd(elcd), 
+										  .lcdd(lcdd));
 
     seven_seg_dev      seven_seg(
                                 .disp_num(disp_num),
@@ -47,7 +76,8 @@ module Top_Muliti_IOBUS(
                                 .SEGMENT(SEGMENT),
                                 .AN(digit_anode)
                                 );
-
+	 
+		
     BTN_Anti_jitter     BTN_OK(
                                 clk_50mhz,
                                 BTN,
