@@ -8,7 +8,7 @@ module Top_Muliti_IOBUS(
                         SEGMENT,
                         AN_SEL,
 								LCDRS, LCDRW, LCDE,
-								LCDDAT,LED
+								LCDDAT
                         );
     input clk_50mhz;
     input  [ 4: 0] BTN;
