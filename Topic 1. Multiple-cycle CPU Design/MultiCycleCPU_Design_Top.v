@@ -47,7 +47,32 @@ module Top_Muliti_IOBUS(
 	 wire rslcd, rwlcd, elcd;
 	 wire debpb0;
 
-	 reg [255:0]strdata = "0123456789abcdefHello world!0000";
+	 reg [255:0]strdata;
+	 
+	 always @(posedge clk_50mhz)
+		begin
+			strdata[255:248] = Inst[31:28]+((Inst[31:28]>9)?55:48);
+			strdata[247:240] = Inst[27:24]+((Inst[27:24]>9)?55:48);
+			strdata[239:232] = Inst[23:20]+((Inst[23:20]>9)?55:48);
+			strdata[231:224] = Inst[19:16]+((Inst[19:16]>9)?55:48);
+			strdata[223:216] = Inst[15:12]+((Inst[15:12]>9)?55:48);
+			strdata[215:208] = Inst[11:8]+((Inst[11:8]>9)?55:48);
+			strdata[207:200] = Inst[7:4]+((Inst[7:4]>9)?55:48);
+			strdata[199:192] = Inst[3:0]+((Inst[3:0]>9)?55:48);
+			strdata[191:184] = Clk_CPU+48;
+			strdata[183:176] = pc[7:4]+((pc[7:4]>9)?55:48);
+			strdata[175:168] = pc[3:0]+((pc[3:0]>9)?55:48);
+			//strdata[179:176] = ram_addr[3:0]+48;
+			//strdata[81:72] = ram_addr;
+			//strdata[127:120] = state+48;
+			//strdata[119:112] = " ";
+			//strdata[111:104] = type+48;
+			//strdata[103:96] = " ";
+			//strdata[95:88] = Inst[31:28];
+			//strdata[95:88] = Inst[31:28];
+			//strdata[31:24] = pc[7:0];
+			//strdata[19:4] = ram_data_out[15:0];
+		end
 
 	 assign LCDDAT[3]=lcdd[3];
 	 assign LCDDAT[2]=lcdd[2];
