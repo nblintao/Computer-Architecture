@@ -1,7 +1,7 @@
 // Spartan-3E Starter Board
 // Liquid Crystal Display Test lcdtest.v
 
-/*module lcdtest(input CCLK, BTN2, input [3:0] SW, output LCDRS, LCDRW, LCDE, 
+module lcdtest(input CCLK, BTN2, input [3:0] SW, output LCDRS, LCDRW, LCDE, 
 					output [3:0] LCDDAT, output [7:0] LED);
 					
 wire [3:0] lcdd;
@@ -59,17 +59,17 @@ begin
 //	end
 end
 
-endmodule*/
+endmodule
 
 module display(input CCLK, reset,input [255:0]strdata, output rslcd, rwlcd, elcd, 
 					output [3:0] lcdd);
-	wire [7:0] lcddatin;
+wire [7:0] lcddatin;
 					
-	lcd M0 (CCLK, resetlcd, clearlcd, homelcd, datalcd, addrlcd,
+lcd M0 (CCLK, resetlcd, clearlcd, homelcd, datalcd, addrlcd,
 			lcdreset, lcdclear, lcdhome, lcddata, lcdaddr,
 			rslcd, rwlcd, elcd, lcdd, lcddatin, initlcd);
 			
-	genlcd M1 (CCLK, reset, strdata, resetlcd, clearlcd, homelcd, datalcd,
+genlcd M1 (CCLK, reset, strdata, resetlcd, clearlcd, homelcd, datalcd,
 				addrlcd, initlcd, lcdreset, lcdclear, lcdhome,
 				lcddata, lcdaddr, lcddatin);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        				
 endmodule
@@ -82,11 +82,11 @@ module genlcd(input CCLK, debpb0, input [255:0]strdata, output reg resetlcd,
 					input lcdhome, lcddata, lcdaddr,
 					output reg [7:0] lcddatin);
 					
-	reg [3:0] gstate;		// state register
+reg [3:0] gstate;		// state register
 
-	integer i;
+integer i;
 	
-	always@(posedge CCLK)
+always@(posedge CCLK)
 	begin
 		if (debpb0==1)
 			begin

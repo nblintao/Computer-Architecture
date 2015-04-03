@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    09:40:35 05/16/2014 
+// Create Date:    15:41:46 03/23/2015 
 // Design Name: 
-// Module Name:    mux4to1_5 
+// Module Name:    adder 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,18 +18,23 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module mux4to1_5(
-	a,
-	b,
-	c,
-	d,
-	sel,
-	o
+module adder(input clk, output reg [3:0] address 
     );
-	input [ 4: 0] a,b,c,d;
-	input [ 1: 0] sel;
-	output [ 4: 0] o; 
-	
-	 assign o = ( sel == 2'b00)? a: ( sel == 2'b01 )? b: ( sel == 2'b10 )? c: ( sel == 2'b11 )? d : 0;
+	 initial begin
+		address = 4'b0;
+	 end
+	 
+	 always@(posedge clk)
+	 begin
+	   if (address < 4'b1111)
+		  begin
+		    address <= address + 1;
+		  end
+		else
+		  begin
+		    address <= 4'b0;
+		  end
+	 end
 
 endmodule
+

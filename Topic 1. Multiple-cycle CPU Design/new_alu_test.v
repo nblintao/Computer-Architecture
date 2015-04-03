@@ -4,10 +4,10 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   19:08:00 03/22/2015
+// Create Date:   20:25:30 03/11/2014
 // Design Name:   alu
-// Module Name:   E:/3130000011_multi_cpu/mcpu/alu2_tbw.v
-// Project Name:  mcpu
+// Module Name:   C:/Users/Student/Desktop/arch_frame/new_alu_test.v
+// Project Name:  arch_frame
 // Target Device:  
 // Tool versions:  
 // Description: 
@@ -22,54 +22,57 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module alu2_tbw;
+module new_alu_test;
 
 	// Inputs
 	reg [31:0] A;
 	reg [31:0] B;
-	reg [2:0] ALU_operation;
+	reg [2:0] control;
 
 	// Outputs
-	wire [31:0] res;
-	wire zero;
-	wire overflow;
+	wire [31:0] result;
 
 	// Instantiate the Unit Under Test (UUT)
 	alu uut (
 		.A(A), 
 		.B(B), 
-		.ALU_operation(ALU_operation), 
-		.res(res), 
-		.zero(zero), 
-		.overflow(overflow)
+		.control(control), 
+		.result(result)
 	);
 
 	initial begin
 		// Initialize Inputs
 		A = 0;
 		B = 0;
-		ALU_operation = 0;
+		control = 0;
 
 		// Wait 100 ns for global reset to finish
-		#10;
-        
+		#100;
+      A = 32'd123123;
+		B = 32'd234234;
+		control = 3'b000;	// add
+		
+		#100;
+      A = 32'd123123;
+		B = 32'd234234;
+		control = 3'b001;	// sub
+		
+		#100;
+      A = 32'h0101;
+		B = 32'h1010;
+		control = 3'b010;	// nor
+		
+		#100;
+      A = 32'hABCD;
+		B = 32'hEFAB;
+		control = 3'b011;	// and
+		
+		#100;
+      A = 32'd123123;
+		B = 32'd322325;
+		control = 3'b111;	// slt
 		// Add stimulus here
-		A = 31;
-		B = 8;
-		ALU_operation = 1;
-		#10;
-		ALU_operation = 2;
-		#10;
-		ALU_operation = 3;
-		#10;
-		ALU_operation = 4;
-		#10;
-		ALU_operation = 5;
-		#10;
-		ALU_operation = 6;
-		#10;
-		ALU_operation = 7;
-		#10;
+
 	end
       
 endmodule
