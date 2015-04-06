@@ -66,6 +66,10 @@ module mips_top (
 		.locked(locked)
 		);
 	
+	//initial begin
+		//rst_count = 0;
+	//end
+	
 	always @(posedge clk_cpu) begin
 		rst_all <= (rst_count != 0);
 		rst_count <= {rst_count[14:0], (btn_reset | (~locked))};

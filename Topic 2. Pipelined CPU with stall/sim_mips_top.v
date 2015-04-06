@@ -53,13 +53,19 @@ module sim_mips_top;
 		ROTCTR = 0;
 
 		// Wait 100 ns for global reset to finish
-		#100;
-        
+		#300;
 		// Add stimulus here
 
 	end
 	
 	initial forever #10 CCLK = ~CCLK;
+	
+	always begin
+		BTNW = 1;
+		#10;
+		BTNW = 0;
+		#100;
+	end
       
 endmodule
 
