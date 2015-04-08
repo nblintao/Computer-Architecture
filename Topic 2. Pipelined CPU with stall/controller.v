@@ -115,7 +115,7 @@ module controller (/*AUTOARG*/
 				imm_ext = 1; //?
 				is_branch = 1; //?
 				rs_used = 1; //? zyh not sure
-				rt_used = 1; //? zyh not sure
+				rt_used = 0; //? zyh not sure
 			end
 			INST_LW: begin
 				imm_ext = 1;

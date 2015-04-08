@@ -151,7 +151,7 @@ module datapath (
 		else if (if_en) begin
 			if_valid <= 1;
 			inst_ren <= 1;
-			inst_addr <= is_branch_mem ? alu_out_exe : inst_addr_next; //?
+			inst_addr <= is_branch_mem ? alu_out_mem[15:0]<<2 : inst_addr_next; //?
 		end
 	end
 	
