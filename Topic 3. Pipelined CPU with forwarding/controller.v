@@ -179,11 +179,18 @@ module controller (/*AUTOARG*/
 		end
 		`endif
 		// this stall indicate that ID is waiting for previous LW instruction, insert one NOP between ID and EXE.
+		// else if (reg_stall) begin
+		// 	if_en = 0;
+		// 	id_en = 0;
+		// 	exe_rst = 1;
+		// end
 		else if (reg_stall) begin
 			if_en = 0;
 			id_en = 0;
-			exe_rst = 1;
+			exe_en = 0;
+			mem_rst = 1;
 		end
+
 	end
 	
 endmodule
