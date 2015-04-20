@@ -207,7 +207,7 @@ module datapath (
 		.data_w(regw_data_wb)
 		);
 	
-	always @(*) begin
+	always @(posedge clk) begin
 		reg_stall = 0;
 		
 		// AFromEx = rs_used_ctrl && (addr_rs != 0) && (regw_addr_exe == addr_rs) && wb_wen_exe;
@@ -215,22 +215,22 @@ module datapath (
 		// AFromMem = rs_used_ctrl && (addr_rs != 0) && (regw_addr_mem == addr_rs) && wb_wen_mem; //?
 		// BFromMem = rt_used_ctrl && (addr_rt != 0) && (regw_addr_mem == addr_rt) && wb_wen_mem; //?
 
-		AfromEXLW = rs_used_ctrl && (regw_addr_exe == addr_rs) && wb_wen_exe && mem_wen_exe;
-		BfromEXLW = rt_used_ctrl && (regw_addr_exe == addr_rt) && wb_wen_exe && mem_wen_exe;
+		AfromEXLW = rs_used_ctrl && (regw_addr_exe == addr_rs) && wb_wen_exe && mem_ren_exe && (!mem_wen_ctrl);
+		BfromEXLW = rt_used_ctrl && (regw_addr_exe == addr_rt) && wb_wen_exe && mem_ren_exe && (!mem_wen_ctrl);
 		
 		reg_stall = AfromEXLW || BfromEXLW;	
 		// reg_stall = AFromEx || BFromEx || AFromMem || BFromMem;		
 	end
 
-	always @(*) begin
-		if(mem_wen && (regw_addr_mem !=0) && (regw_addr_mem ==addr_rs))
+	always @(posedge clk) begin
+		if(wb_wen_mem && (regw_addr_mem !=0) && (regw_addr_mem == addr_rs))
 			fwd_a_ctrl = 2'b01;
 		else if(wb_wen_wb &&(regw_addr_wb!=0) && (regw_addr_mem !=addr_rs) &&(regw_addr_wb==addr_rs))
 			fwd_a_ctrl = 2'b10;
 		else
 			fwd_a_ctrl = 2'b00;
 
-		if(mem_wen &&(regw_addr_mem !=0) && (regw_addr_mem ==addr_rt))
+		if(wb_wen_mem &&(regw_addr_mem !=0) && (regw_addr_mem ==addr_rt))
 			fwd_b_ctrl = 2'b01;
 		else if(wb_wen_wb &&(regw_addr_wb!=0) &&(regw_addr_mem !=addr_rt) &&(regw_addr_wb==addr_rt))
 			fwd_b_ctrl = 2'b10;
@@ -355,14 +355,27 @@ module datapath (
 		mem_addr = alu_out_mem,
 		mem_dout = fwd_m_ctrl ? regw_data_mem : data_rt_mem;
 
-// WB stage
-	// wire wb_data_src_wb;
-	// assign wb_data_src_wb = wb_data_src_mem;
+	// WB stage
 
-	always @(*) begin
-		wb_valid = wb_en;
-		wb_wen_wb = wb_wen_mem & wb_en;
-		regw_addr_wb = regw_addr_mem;
-		regw_data_wb = regw_data_mem; // Tao
+	always @(posedge clk) begin
+		if (wb_rst) begin
+			wb_valid <= 0;
+			regw_addr_wb <= 0;
+			regw_data_wb <= 0;
+			wb_wen_wb <= 0;			
+		end
+		else if (wb_en) begin
+			wb_valid <= 1;
+			regw_addr_wb <= regw_addr_mem;
+			regw_data_wb <= regw_data_mem;
+			wb_wen_wb <= wb_wen_mem;
+		end
 	end
+
+	// always @(*) begin
+	// 	wb_valid = wb_en;
+	// 	wb_wen_wb = wb_wen_mem & wb_en;
+	// 	regw_addr_wb = regw_addr_mem;
+	// 	regw_data_wb = regw_data_mem; // Tao
+	// end
 endmodule
