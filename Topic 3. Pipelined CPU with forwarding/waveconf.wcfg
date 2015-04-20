@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="D:/Computer Architecture Experiment/CPU/sim_mips_top_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="sim_mips_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="30" />
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CONTROLLER/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CONTROLLER/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/if_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">if_rst</obj_property>
+      <obj_property name="ObjectShortName">if_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/if_valid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">if_valid</obj_property>
+      <obj_property name="ObjectShortName">if_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_ren" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_ren</obj_property>
+      <obj_property name="ObjectShortName">inst_ren</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/id_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">id_rst</obj_property>
+      <obj_property name="ObjectShortName">id_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/id_valid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">id_valid</obj_property>
+      <obj_property name="ObjectShortName">id_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_addr_exe" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_addr_exe[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_addr_exe[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_data_exe" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_data_exe[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_data_exe[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_a_ctrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fwd_a_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">fwd_a_ctrl[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_b_ctrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fwd_b_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">fwd_b_ctrl[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/reg_stall" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reg_stall</obj_property>
+      <obj_property name="ObjectShortName">reg_stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_rst</obj_property>
+      <obj_property name="ObjectShortName">mem_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_valid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_valid</obj_property>
+      <obj_property name="ObjectShortName">mem_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_addr_mem" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_addr_mem[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_addr_mem[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/inst_data_mem" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">inst_data_mem[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_data_mem[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_m_ctrl" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">fwd_m_ctrl</obj_property>
+      <obj_property name="ObjectShortName">fwd_m_ctrl</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_ren_mem" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_ren_mem</obj_property>
+      <obj_property name="ObjectShortName">mem_ren_mem</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_wen_mem" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_wen_mem</obj_property>
+      <obj_property name="ObjectShortName">mem_wen_mem</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_din" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_din[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/mem_dout" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_dout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_dout[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_rst</obj_property>
+      <obj_property name="ObjectShortName">wb_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_valid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_valid</obj_property>
+      <obj_property name="ObjectShortName">wb_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_wen_wb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_wen_wb</obj_property>
+      <obj_property name="ObjectShortName">wb_wen_wb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_addr_wb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regw_addr_wb[4:0]</obj_property>
+      <obj_property name="ObjectShortName">regw_addr_wb[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_data_wb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regw_data_wb[31:0]</obj_property>
+      <obj_property name="ObjectShortName">regw_data_wb[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/REGFILE/regfile" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regfile[1:31,31:0]</obj_property>
+      <obj_property name="ObjectShortName">regfile[1:31,31:0]</obj_property>
+   </wvobject>
+</wave_config>
