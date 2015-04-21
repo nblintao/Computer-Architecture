@@ -271,7 +271,7 @@ module datapath (
 	// end
 
 	always @(*) begin
-		fwd_m_ctrl = (regw_addr_mem == regw_addr_wb) && mem_wen_mem && wb_wen_wb;
+		fwd_m_ctrl = (inst_data_mem[20:16] == regw_addr_wb) && mem_wen_mem && wb_wen_wb;
 	end
 	
 	always @(*) begin
@@ -371,7 +371,7 @@ module datapath (
 			wb_data_src_mem <= wb_data_src_exe;
 			wb_wen_mem <= wb_wen_exe;
 			is_branch_mem <= is_branch_exe;
-			last_addr_rt <= addr_rt;
+			// last_addr_rt <= addr_rt;
 		end
 	end
 
