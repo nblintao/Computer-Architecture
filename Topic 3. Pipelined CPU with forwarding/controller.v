@@ -189,6 +189,13 @@ module controller (/*AUTOARG*/
 			id_en = 0;
 			exe_en = 0;
 			mem_rst = 1;
+
+			// if_en = 0;
+			// id_en = 0;
+			// exe_en = 0;
+			// mem_en = 0;
+			// wb_rst = 1;
+			
 		end
 
 	end
