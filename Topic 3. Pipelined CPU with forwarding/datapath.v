@@ -318,6 +318,9 @@ module datapath (
 			wb_wen_exe <= wb_wen_ctrl; //?
 			is_branch_exe <= is_branch_ctrl & (data_rs == data_rt);  // BEQ only
 		end
+		// else
+			// opa_exe <= opa_id; //?!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// TODO exe 0c cannot get opa_id in time
 	end
 	
 	assign
@@ -357,7 +360,7 @@ module datapath (
 			wb_data_src_mem <= 0;
 			wb_wen_mem <= 0;
 			is_branch_mem <= 0;
-			// last_addr_rt <= 0;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			last_addr_rt <= 2;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		end
 		else if (mem_en) begin
 			mem_valid <= exe_valid;
@@ -372,7 +375,7 @@ module datapath (
 			wb_data_src_mem <= wb_data_src_exe;
 			wb_wen_mem <= wb_wen_exe;
 			is_branch_mem <= is_branch_exe;
-			// last_addr_rt <= addr_rt;
+			last_addr_rt <= addr_rt;
 		end
 	end
 
