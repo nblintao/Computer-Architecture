@@ -182,7 +182,8 @@ module datapath (
 	assign
 		addr_rs = inst_data_ctrl[25:21],
 		addr_rt = inst_data_ctrl[20:16],
-		data_imm = imm_ext_ctrl ? {inst_data_ctrl[15:0], 2'b0} : {inst_data_ctrl[15:0]}; //? zyh: it is not Sign Extend
+		// data_imm = imm_ext_ctrl ? {inst_data_ctrl[15:0], 2'b0} : {inst_data_ctrl[15:0]}; //? zyh: it is not Sign Extend
+		data_imm = imm_ext_ctrl ? {inst_data_ctrl[15:0]} : {inst_data_ctrl[15:0]}; //? zyh: it is not Sign Extend
 	
 	always @(*) begin
 		regw_addr_id = inst_data_ctrl[15:11];
@@ -387,7 +388,7 @@ module datapath (
 		mem_ren = mem_ren_mem,
 		mem_wen = mem_wen_mem,
 		mem_addr = alu_out_mem,
-		mem_dout = fwd_m_ctrl ? regw_data_mem : data_rt_mem;
+		mem_dout = fwd_m_ctrl ? regw_data_wb : data_rt_mem;
 
 	// WB stage
 	reg [31:0] wb_data_src_wb;
