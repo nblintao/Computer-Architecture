@@ -97,9 +97,33 @@
       <obj_property name="ObjectShortName">alu_a_exe[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/opa_id" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">opa_id[31:0]</obj_property>
+      <obj_property name="ObjectShortName">opa_id[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_a_ctrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fwd_a_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">fwd_a_ctrl[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_b_ctrl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fwd_b_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">fwd_b_ctrl[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+   </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_data_wb" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">regw_data_wb[31:0]</obj_property>
       <obj_property name="ObjectShortName">regw_data_wb[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/opb_exe" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">opb_exe[31:0]</obj_property>
+      <obj_property name="ObjectShortName">opb_exe[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/old_alu_a_exe" type="array" db_ref_id="1">
@@ -112,11 +136,6 @@
       <obj_property name="ObjectShortName">opa_exe[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/opa_id" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">opa_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">opa_id[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/addr_rs" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">addr_rs[4:0]</obj_property>
       <obj_property name="ObjectShortName">addr_rs[4:0]</obj_property>
@@ -125,13 +144,6 @@
       <obj_property name="ElementShortName">data_rs[31:0]</obj_property>
       <obj_property name="ObjectShortName">data_rs[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_a_ctrl" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">fwd_a_ctrl[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fwd_a_ctrl[1:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_wen_mem" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">wb_wen_mem</obj_property>
@@ -152,13 +164,6 @@
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_wen_wb" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">wb_wen_wb</obj_property>
       <obj_property name="ObjectShortName">wb_wen_wb</obj_property>
-   </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/fwd_b_ctrl" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">fwd_b_ctrl[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fwd_b_ctrl[1:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/last_addr_rt" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">last_addr_rt[4:0]</obj_property>
@@ -286,10 +291,6 @@
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_wen_wb" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">wb_wen_wb</obj_property>
       <obj_property name="ObjectShortName">wb_wen_wb</obj_property>
-   </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_wen_mem" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">wb_wen_mem</obj_property>
-      <obj_property name="ObjectShortName">wb_wen_mem</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/wb_en" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">wb_en</obj_property>
