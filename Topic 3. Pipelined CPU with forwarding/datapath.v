@@ -53,8 +53,9 @@ module datapath (
 	// WB signals
 	input wire wb_rst,
 	input wire wb_en,
-	output reg wb_valid,
-	input wire btn_reset);
+	output reg wb_valid
+	// ,input wire btn_reset
+	);
 	reg [31:0] inst_addr_id;
 	reg [31:0] inst_addr_exe;
 	reg [31:0] inst_data_exe;
@@ -95,17 +96,17 @@ module datapath (
 	wire [31:0] alu_out_exe;
 	reg [4:0] addr_rt_exe;
 	reg [4:0] addr_rs_exe;
-	reg [1:0] ForwardA;
-	reg [1:0] ForwardB;
-	reg [1:0] ForwardA_exe;
-	reg [1:0] ForwardB_exe;
+	reg [1:0] fwd_a_ctrl;
+	reg [1:0] fwd_b_ctrl;
+	// reg [1:0] fwd_a_ctrl_exe;
+	// reg [1:0] fwd_b_ctrl_exe;
 	// MEM signals
 	
 	reg [4:0] regw_addr_mem;
 	reg [31:0] opa_mem, data_rt_mem;
 	reg [31:0] alu_out_mem;
 	reg [31:0] regw_data_mem;
-	reg fwdm;
+	reg fwd_m_ctrl;
 	reg [4:0] addr_rt_mem;
 	reg [4:0] addr_rs_mem;
 	reg [31:0]mem_din_mem;
@@ -211,8 +212,8 @@ module datapath (
 		.data_b(data_rt),
 		.en_w(wb_wen_wb),
 		.addr_w(regw_addr_wb),
-		.data_w(regw_data_wb),
-		.btn_reset(btn_reset)
+		.data_w(regw_data_wb)
+		// ,.btn_reset(btn_reset)
 		);
 	
 	always @(*) begin
@@ -247,26 +248,26 @@ module datapath (
 	end*/
 	// EXE stage
 	always @(*) begin
-		ForwardA= 2'b00;
+		fwd_a_ctrl= 2'b00;
 		if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_mem == addr_rs_exe) && (mem_wen_exe == 0) && !reg_stall)
-			ForwardA= 2'b01;
+			fwd_a_ctrl= 2'b01;
 		if(wb_wen_wb_1 && (regw_addr_wb_1 != 0) && (regw_addr_mem != addr_rs_exe) && (regw_addr_wb_1 == addr_rs_exe) && (mem_wen_exe == 0) && !reg_stall)
-			ForwardA= 2'b10;
+			fwd_a_ctrl= 2'b10;
 		
-		ForwardB= 2'b00;
+		fwd_b_ctrl= 2'b00;
 		if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_mem == addr_rt_exe) && (mem_wen_exe == 0) && !reg_stall)
-			ForwardB= 2'b01;
+			fwd_b_ctrl= 2'b01;
 		if(wb_wen_wb_1 && (regw_addr_wb_1 != 0) && (regw_addr_mem != addr_rt_exe) && (regw_addr_wb_1 == addr_rt_exe) && (mem_wen_exe == 0) && !reg_stall)
-			ForwardB= 2'b10;
+			fwd_b_ctrl= 2'b10;
 	end
 	always @(*) begin
-		case (ForwardA)
+		case (fwd_a_ctrl)
 			2'b00:alu_a_exe = alu_a_exe_temp;
 			2'b01:alu_a_exe = is_branch_exe ? inst_addr_next_exe : alu_out_mem;
 			2'b10:alu_a_exe = is_branch_exe ? inst_addr_next_exe : regw_data_wb_1;
 			//default:alu_a_exe = regw_data_wb_1;
 		endcase
-		case (ForwardB)
+		case (fwd_b_ctrl)
 			2'b00:alu_b_exe = alu_b_exe_temp;
 			2'b01:alu_b_exe = is_branch_exe ? {opb_exe[29:0], 2'b0} : alu_out_mem;
 			2'b10:alu_b_exe = is_branch_exe ? {opb_exe[29:0], 2'b0} : regw_data_wb_1;
@@ -333,7 +334,7 @@ module datapath (
 	
 	// MEM stage
 	always @(posedge clk) begin
-		fwdm = (addr_rt_mem == regw_addr_wb) && mem_wen_exe && wb_wen_mem;
+		fwd_m_ctrl = (addr_rt_mem == regw_addr_wb) && mem_wen_exe && wb_wen_mem;
 	end
 	always @(posedge clk) begin
 		if (mem_rst) begin
@@ -364,7 +365,7 @@ module datapath (
 			mem_wen_mem <= mem_wen_exe;
 			wb_data_src_mem <= wb_data_src_exe;
 			wb_wen_mem <= wb_wen_exe;
-			is_branch_mem <= is_branch_exe & (((ForwardA == 0) && (ForwardB == 0) && (data_rs_exe == data_rt_exe)) || ((ForwardA == 1) && (ForwardB == 0) && (data_rt_exe == alu_out_mem)) || ((ForwardB == 0) && (ForwardA == 2) && (data_rt_exe == regw_data_wb_1)) || ((ForwardA == 0) && (ForwardB == 1) && (data_rs_exe == alu_out_mem)) || ((ForwardA == 0) && (ForwardB == 2) && (data_rs_exe == regw_data_wb_1)) || ((ForwardA != 0) && (ForwardB != 0) && (alu_out_mem == regw_data_wb_1)));
+			is_branch_mem <= is_branch_exe & (((fwd_a_ctrl == 0) && (fwd_b_ctrl == 0) && (data_rs_exe == data_rt_exe)) || ((fwd_a_ctrl == 1) && (fwd_b_ctrl == 0) && (data_rt_exe == alu_out_mem)) || ((fwd_b_ctrl == 0) && (fwd_a_ctrl == 2) && (data_rt_exe == regw_data_wb_1)) || ((fwd_a_ctrl == 0) && (fwd_b_ctrl == 1) && (data_rs_exe == alu_out_mem)) || ((fwd_a_ctrl == 0) && (fwd_b_ctrl == 2) && (data_rs_exe == regw_data_wb_1)) || ((fwd_a_ctrl != 0) && (fwd_b_ctrl != 0) && (alu_out_mem == regw_data_wb_1)));
 			addr_rt_mem <= addr_rt_exe;
 			addr_rs_mem <= addr_rs_exe;
 			mem_din_mem <= mem_din;
@@ -388,7 +389,7 @@ module datapath (
 		mem_din_mem <= mem_din;
 	end*/
 	always @(*) begin
-		case (fwdm)
+		case (fwd_m_ctrl)
 			0:mem_dout = data_rt_mem;
 			1:mem_dout = mem_din_mem;
 			default:;
