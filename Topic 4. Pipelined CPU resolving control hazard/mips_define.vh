@@ -35,6 +35,11 @@ localparam
 	//WB_DATA_LINK  = 2,
 	//WB_DATA_REGA  = 3;
 
+//localparam
+	//PC_NEXT = 0;
+	//PC_JUMP = 1;
+	//PC_BRANCH = 2;
+
 // variables
 localparam
 	PC_RESET  = 32'h0000_0000;

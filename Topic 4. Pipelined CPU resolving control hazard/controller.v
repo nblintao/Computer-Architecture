@@ -43,13 +43,20 @@ module controller (/*AUTOARG*/
 	input wire mem_valid,
 	output reg wb_rst,
 	output reg wb_en,
-	input wire wb_valid
+	input wire wb_valid,
+	output reg is_load,
+	output reg is_store,
+	output reg [1:0] fwd_a,
+	output reg [1:0] fwd_b,
+	output reg fwd_m
+	
 	);
 	
 	`include "mips_define.vh"
 	
 	// instruction decode
 	always @(*) begin
+		pc_src = PC_NEXT;    //new 5_12
 		imm_ext = 0;
 		exe_b_src = EXE_B_RT;
 		exe_alu_oper = EXE_ALU_ADD;
@@ -61,6 +68,8 @@ module controller (/*AUTOARG*/
 		is_branch = 0;
 		rs_used = 0;
 		rt_used = 0;
+		is_load = 0;         //new 5_12
+		is_store = 0;        //new 5_12
 		unrecognized = 0;
 		case (inst[31:26])
 			INST_R: begin
@@ -110,12 +119,24 @@ module controller (/*AUTOARG*/
 					end
 				endcase
 			end
-			INST_BEQ: begin
+
+			INST_J: begin             //new 5_12
+				pc_src = PC_JUMP;
+			end
+			/*INST_BEQ: begin
 				exe_b_src = EXE_B_IMM; //?
 				imm_ext = 1; //?
 				is_branch = 1; //?
 				rs_used = 1; //? zyh not sure
 				rt_used = 0; //? zyh not sure
+			end*/
+			INST_BEQ: begin          //new 5_12
+				if (rs_rt_equal) begin
+					pc_src = PC_BRANCH;
+				end
+				imm_ext = 1;
+				rs_used = 1;
+				rt_used = 1;
 			end
 			INST_LW: begin
 				imm_ext = 1;
@@ -125,6 +146,7 @@ module controller (/*AUTOARG*/
 				wb_addr_src = WB_ADDR_RT;
 				wb_data_src = WB_DATA_MEM;
 				wb_wen = 1;
+				is_load = 1;
 				rs_used = 1;
 			end
 			INST_SW: begin
@@ -132,6 +154,7 @@ module controller (/*AUTOARG*/
 				exe_b_src = EXE_B_IMM; //?
 				exe_alu_oper = EXE_ALU_ADD; //?
 				mem_wen = 1; //?
+				is_store = 1;
 				rs_used = 1; //?
 				rt_used = 1; //?
 			end
@@ -150,6 +173,48 @@ module controller (/*AUTOARG*/
 	end
 	`endif
 	
+	always @(*) begin
+		reg_stall = 0;
+		fwd_a = 0;
+		fwd_b = 0;
+		fwd_m = 0;
+		if (rs_used && addr_rs!=0) begin
+			if (regw_addr_exe==addr_rs && wb_wen_exe) begin
+				if (is_load_exe)
+					reg_stall = 1;
+				else
+					fwd_a = 1;
+			end
+			else if (regw_addr_mem==addr_rs && wb_wen_mem) begin
+				if (is_load_mem)
+					fwd_a = 3;
+				else 
+					fwd_a = 2;
+			end
+		end
+
+		if (rt_used && addr_rt!=0) begin
+			if (regw_addr_exe==addr_rt && wb_wen_exe) begin
+				if (is_load_exe)
+					reg_stall = 1;
+				else
+					fwd_b = 1;
+			end
+			else if (regw_addr_mem==addr_rt && wb_wen_mem) begin
+				if (is_load_mem)
+					fwd_b = 3;
+				else 
+					fwd_b = 2;
+			end
+		end
+
+		if (is_store_mem && addr_rt_mem!=0) begin
+			if (regw_addr_wb==addr_rt_mem && wb_wen_wb) begin
+				fwd_m = 1;
+			end
+		end
+	end
+
 	always @(*) begin
 		if_rst = 0;
 		if_en = 1;
