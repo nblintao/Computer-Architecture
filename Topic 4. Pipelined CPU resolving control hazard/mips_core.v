@@ -58,10 +58,11 @@ module mips_core (
     wire is_load_mem;
     wire is_store_mem;
     wire [4:0] addr_rt_mem;
-	wire [4:0] regw_addr_mem;
+	 wire [4:0] regw_addr_mem;
     wire wb_wen_mem;
     wire [4:0] regw_addr_wb;
     wire wb_wen_wb;
+	 wire [4:0] addr_rt, addr_rs;
     wire [1:0] pc_src_ctrl;
     reg wb_wen;
     reg [1:0] fwd_a;
@@ -184,6 +185,8 @@ module mips_core (
 		.wb_wen_mem(wb_wen_mem),  //
 		.regw_addr_wb(regw_addr_wb),  //
 		.wb_wen_wb(wb_wen_wb),  //
+		.addr_rt(addr_rt),  //
+		.addr_rs(addr_rs),  //
 		.pc_src_ctrl(pc_src_ctrl),  //
 		.fwd_a_ctrl(fwd_a_ctrl),  //
 		.fwd_b_ctrl(fwd_b_ctrl),  //

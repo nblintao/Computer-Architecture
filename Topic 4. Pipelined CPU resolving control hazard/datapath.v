@@ -66,7 +66,9 @@ module datapath (
 	output reg [4:0] regw_addr_mem,
 	output reg wb_wen_mem,
 	output reg [4:0] regw_addr_wb,
-	output reg wb_wen_wb,	
+	output reg wb_wen_wb,
+	output wire [4:0] addr_rt,
+	output wire [4:0] addr_rs,
 
 	input wire [1:0] pc_src_ctrl,
 	input wire [1:0] fwd_a_ctrl,
@@ -93,8 +95,6 @@ module datapath (
 	reg [31:0] inst_data_id;
 	reg [31:0] inst_addr_next_id;
 	reg [4:0] regw_addr_id;
-	reg [31:0] opa_id, opb_id;
-	wire [4:0] addr_rs, addr_rt;
 	wire [31:0] data_rs, data_rt, data_imm;
 	//reg AFromExLW,BFromExLW,AFromMem,BFromMem,AFromEx,BFromEx;
 
@@ -122,9 +122,6 @@ module datapath (
 	
 	// WB signals
 	reg [31:0] regw_data_wb;
-	reg [4:0] regw_addr__wb;
-	reg wb_wen__wb;
-	reg [31:0] regw_data__wb;
 	reg wb_wen_final;
 	// debug
 	`ifdef DEBUG
@@ -274,14 +271,14 @@ module datapath (
 		reg_stall = AFromExLW || BFromExLW;	
 	end*/
 	
-	always @(*) begin
+	/*always @(*) begin
 		opa_id = data_rs;
 		opb_id = data_rt;
 		case (exe_b_src_ctrl)
 			EXE_B_RT: opb_id = data_rt;
 			EXE_B_IMM: opb_id = data_imm;
 		endcase
-	end
+	end*/
 	
 	// EXE stage
 	/*always @(*) begin
