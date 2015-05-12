@@ -68,7 +68,7 @@ module controller (/*AUTOARG*/
     input wire is_load_mem, // whether instruction in MEM stage is LW
     input wire is_store_mem, // whether instruction in MEM stage is SW
     input wire [4:0] addr_rt_mem, // address of RT from MEM stage
-	input wire [4:0] regw_addr_mem, // register write address from MEM stage
+	 input wire [4:0] regw_addr_mem, // register write address from MEM stage
     input wire wb_wen_mem, // register write enable signal feedback from MEM stage
     input wire [4:0] regw_addr_wb, // register write address from WB stage
     input wire wb_wen_wb, // register write enable signal feedback from WB stage

@@ -137,7 +137,7 @@ module mips_core (
 		.debug_addr(debug_addr),
 		.debug_data(debug_data),
 		`endif
-		.inst_data_ctrl(inst_data_ctrl),
+		.inst_data_id(inst_data_ctrl),
 		.rs_used_ctrl(rs_used_ctrl),
 		.rt_used_ctrl(rt_used_ctrl),
 		.imm_ext_ctrl(imm_ext_ctrl),

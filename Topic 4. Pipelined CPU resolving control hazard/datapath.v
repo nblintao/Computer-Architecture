@@ -13,7 +13,7 @@ module datapath (
 	output wire [31:0] debug_data,  // debug data
 	`endif
 	// control signals
-	output reg [31:0] inst_data_ctrl,  // instruction
+	output reg [31:0] inst_data_id,  // instruction
 	input wire rs_used_ctrl,  // whether RS is used
 	input wire rt_used_ctrl,  // whether RT is used
 	input wire imm_ext_ctrl,  // whether using sign extended to immediate data
@@ -36,7 +36,7 @@ module datapath (
 	input wire id_rst,
 	input wire id_en,
 	output reg id_valid,
-	output reg reg_stall,  // stall signal when LW instruction followed by an related R instruction
+	input wire reg_stall,  // stall signal when LW instruction followed by an related R instruction
 	// EXE signals
 	input wire exe_rst,
 	input wire exe_en,
@@ -92,7 +92,6 @@ module datapath (
 	
 	// ID signals
 	reg [31:0] inst_addr_id;	
-	reg [31:0] inst_data_id;
 	reg [31:0] inst_addr_next_id;
 	reg [4:0] regw_addr_id;
 	wire [31:0] data_rs, data_rt, data_imm;
@@ -138,7 +137,7 @@ module datapath (
 			0: debug_data_signal <= inst_addr;
 			1: debug_data_signal <= inst_data;
 			2: debug_data_signal <= inst_addr_id;
-			3: debug_data_signal <= inst_data_ctrl;
+			3: debug_data_signal <= inst_data_id;
 			4: debug_data_signal <= inst_addr_exe;
 			5: debug_data_signal <= inst_data_exe;
 			6: debug_data_signal <= inst_addr_mem;
@@ -204,6 +203,7 @@ module datapath (
 			inst_addr_next_id <= inst_addr_next;
 		end
 	end
+	
 	
 	assign
 		addr_rs = inst_data_id[25:21],

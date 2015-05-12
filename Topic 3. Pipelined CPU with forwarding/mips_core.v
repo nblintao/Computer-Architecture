@@ -48,6 +48,28 @@ module mips_core (
 	wire exe_rst, exe_en, exe_valid;
 	wire mem_rst, mem_en, mem_valid;
 	wire wb_rst, wb_en, wb_valid;
+
+	// add by zyh
+	wire rs_rt_equal;
+    wire is_load_exe;
+    wire is_store_exe;
+    wire [4:0] regw_addr_exe;
+    wire wb_wen_exe;
+    wire is_load_mem;
+    wire is_store_mem;
+    wire [4:0] addr_rt_mem;
+	 wire [4:0] regw_addr_mem;
+    wire wb_wen_mem;
+    wire [4:0] regw_addr_wb;
+    wire wb_wen_wb;
+	 wire [4:0] addr_rt, addr_rs;
+    wire [1:0] pc_src_ctrl;
+    reg wb_wen;
+    reg [1:0] fwd_a;
+    reg [1:0] fwd_b;
+    reg fwd_m;
+    reg is_load;
+    reg is_store;
 	
 	// controller
 	controller CONTROLLER (
@@ -58,6 +80,19 @@ module mips_core (
 		.debug_step(debug_step),
 		`endif
 		.inst(inst_data_ctrl),
+		.rs_rt_equal(rs_rt_equal),  //
+		.is_load_exe(is_load_exe),  //
+		.is_store_exe(is_store_exe),  //
+		.regw_addr_exe(regw_addr_exe),  //
+		.wb_wen_exe(wb_wen_exe),  //
+		.is_load_mem(is_load_mem),  //
+		.is_store_mem(is_store_mem),  //
+		.addr_rt_mem(addr_rt_mem),  //
+		.regw_addr_mem(regw_addr_mem),  //
+		.wb_wen_mem(wb_wen_mem),  //
+		.regw_addr_wb(regw_addr_wb),  //
+		.wb_wen_wb(wb_wen_wb),  //
+		.pc_src(pc_src_ctrl),  //
 		.imm_ext(imm_ext_ctrl),
 		.exe_b_src(exe_b_src_ctrl),
 		.exe_alu_oper(exe_alu_oper_ctrl),
@@ -66,6 +101,11 @@ module mips_core (
 		.wb_addr_src(wb_addr_src_ctrl),
 		.wb_data_src(wb_data_src_ctrl),
 		.wb_wen(wb_wen_ctrl),
+		.fwd_a(fwd_a_ctrl),  //
+		.fwd_b(fwd_b_ctrl),  //
+		.fwd_m(fwd_m_ctrl),  //
+		.is_load(is_load_ctrl),  //
+		.is_store(is_store_ctrl),  //
 		.is_branch(is_branch_ctrl),
 		.rs_used(rs_used_ctrl),
 		.rt_used(rt_used_ctrl),
@@ -85,7 +125,9 @@ module mips_core (
 		.mem_valid(mem_valid),
 		.wb_rst(wb_rst),
 		.wb_en(wb_en),
-		.wb_valid(wb_valid)
+		.wb_valid(wb_valid),
+		.addr_rs(addr_rs),
+		.addr_rt(addr_rt)
 	);
 	
 	// data path
@@ -95,7 +137,7 @@ module mips_core (
 		.debug_addr(debug_addr),
 		.debug_data(debug_data),
 		`endif
-		.inst_data_ctrl(inst_data_ctrl),
+		.inst_data_id(inst_data_ctrl),
 		.rs_used_ctrl(rs_used_ctrl),
 		.rt_used_ctrl(rt_used_ctrl),
 		.imm_ext_ctrl(imm_ext_ctrl),
@@ -130,7 +172,27 @@ module mips_core (
 		.mem_din(mem_din),
 		.wb_rst(wb_rst),
 		.wb_en(wb_en),
-		.wb_valid(wb_valid)
+		.wb_valid(wb_valid),
+		.rs_rt_equal(rs_rt_equal),  //
+		.is_load_exe(is_load_exe),  //
+		.is_store_exe(is_store_exe),  //
+		.regw_addr_exe(regw_addr_exe),  //
+		.wb_wen_exe(wb_wen_exe),  //
+		.is_load_mem(is_load_mem),  //
+		.is_store_mem(is_store_mem),  //
+		.addr_rt_mem(addr_rt_mem),  //
+		.regw_addr_mem(regw_addr_mem),  //
+		.wb_wen_mem(wb_wen_mem),  //
+		.regw_addr_wb(regw_addr_wb),  //
+		.wb_wen_wb(wb_wen_wb),  //
+		.addr_rt(addr_rt),  //
+		.addr_rs(addr_rs),  //
+		.pc_src_ctrl(pc_src_ctrl),  //
+		.fwd_a_ctrl(fwd_a_ctrl),  //
+		.fwd_b_ctrl(fwd_b_ctrl),  //
+		.fwd_m_ctrl(fwd_m_ctrl),  //
+		.is_load_ctrl(is_load_ctrl),  //
+		.is_store_ctrl(is_store_ctrl)  //
 	);
 	
 endmodule
