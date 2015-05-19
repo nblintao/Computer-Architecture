@@ -39,6 +39,8 @@ module mips_core (
 	wire wb_data_src_ctrl;
 	wire wb_wen_ctrl;
 	wire is_branch_ctrl;
+	wire [4:0] addr_rs;
+	wire [4:0] addr_rt;
 	
 	wire rs_used_ctrl, rt_used_ctrl;
 	
@@ -48,29 +50,31 @@ module mips_core (
 	wire exe_rst, exe_en, exe_valid;
 	wire mem_rst, mem_en, mem_valid;
 	wire wb_rst, wb_en, wb_valid;
-
-	// add by zyh
-	wire rs_rt_equal;
-    wire is_load_exe;
-    wire is_store_exe;
-    wire [4:0] regw_addr_exe;
-    wire wb_wen_exe;
-    wire is_load_mem;
-    wire is_store_mem;
-    wire [4:0] addr_rt_mem;
-	 wire [4:0] regw_addr_mem;
-    wire wb_wen_mem;
-    wire [4:0] regw_addr_wb;
-    wire wb_wen_wb;
-	 wire [4:0] addr_rt, addr_rs;
-    wire [1:0] pc_src_ctrl;
-    reg wb_wen;
-    reg [1:0] fwd_a;
-    reg [1:0] fwd_b;
-    reg fwd_m;
-    reg is_load;
-    reg is_store;
+	wire [4:0] rs_addr_exe,rt_addr_exe,rt_addr_mem,regw_addr_wb,regw_addr_mem;
 	
+	//NEW SIGNAL INPUT
+	wire rs_rt_equal; //whether data from RS and RT are equal
+	//exe part
+	wire is_load_exe;// whether data in EXE is LW
+	wire is_store_exe;//whether data in EXE is SW
+	wire [4:0] regw_addr_exe;//register write address from EXE stage
+	wire wb_wen_exe;// register write enable signal feedback from EXE stage
+	//mem part
+	wire is_load_mem;//whether instruction in MEM is LW
+	wire is_store_mem;//whether insruction in MEM is SW
+	wire [4:0] addr_rt_mem;//address of RT from MEM stage
+	//wire [4:0] regw_addr_mem;//register write address from MEM stage
+	wire wb_wen_mem;// register write enable signal feedback from MEM stage
+	//wb part
+	//wire[4:0] regw_addr_wb;//register write address from WB stage
+	wire wb_wen_wb;//write enable signal feedback from WB stage
+	//output
+	wire [1:0] pc_src;//how would PC change to next
+	wire [1:0] fwd_a;//fowarding selection for channel A
+	wire [1:0] fwd_b;//fowarding selection for channel B
+	wire fwd_mem;//fowarding selection for memory
+	wire is_load;//whether current instruction is LW
+	wire is_store;//whether current instruction is SW
 	// controller
 	controller CONTROLLER (
 		.clk(clk),
@@ -80,19 +84,6 @@ module mips_core (
 		.debug_step(debug_step),
 		`endif
 		.inst(inst_data_ctrl),
-		.rs_rt_equal(rs_rt_equal),  //
-		.is_load_exe(is_load_exe),  //
-		.is_store_exe(is_store_exe),  //
-		.regw_addr_exe(regw_addr_exe),  //
-		.wb_wen_exe(wb_wen_exe),  //
-		.is_load_mem(is_load_mem),  //
-		.is_store_mem(is_store_mem),  //
-		.addr_rt_mem(addr_rt_mem),  //
-		.regw_addr_mem(regw_addr_mem),  //
-		.wb_wen_mem(wb_wen_mem),  //
-		.regw_addr_wb(regw_addr_wb),  //
-		.wb_wen_wb(wb_wen_wb),  //
-		.pc_src(pc_src_ctrl),  //
 		.imm_ext(imm_ext_ctrl),
 		.exe_b_src(exe_b_src_ctrl),
 		.exe_alu_oper(exe_alu_oper_ctrl),
@@ -101,11 +92,6 @@ module mips_core (
 		.wb_addr_src(wb_addr_src_ctrl),
 		.wb_data_src(wb_data_src_ctrl),
 		.wb_wen(wb_wen_ctrl),
-		.fwd_a(fwd_a_ctrl),  //
-		.fwd_b(fwd_b_ctrl),  //
-		.fwd_m(fwd_m_ctrl),  //
-		.is_load(is_load_ctrl),  //
-		.is_store(is_store_ctrl),  //
 		.is_branch(is_branch_ctrl),
 		.rs_used(rs_used_ctrl),
 		.rt_used(rt_used_ctrl),
@@ -126,8 +112,34 @@ module mips_core (
 		.wb_rst(wb_rst),
 		.wb_en(wb_en),
 		.wb_valid(wb_valid),
+		//NEW SIGNAL INPUT
+		.rs_rt_equal(rs_rt_equal), //whether data from RS and RT are equal
 		.addr_rs(addr_rs),
-		.addr_rt(addr_rt)
+		.addr_rt(addr_rt),
+		//exe part
+		.is_load_exe(is_load_exe),// whether data in EXE is LW
+		.is_store_exe(is_store_exe),//whether data in EXE is SW
+		.regw_addr_exe(regw_addr_exe),//register write address from EXE stage
+		.wb_wen_exe(wb_wen_exe),// register write enable signal feedback from EXE stage
+		//mem part
+		.is_load_mem(is_load_mem),//whether instruction in MEM is LW
+		.is_store_mem(is_store_mem),//whether insruction in MEM is SW
+		.addr_rt_mem(addr_rt_mem),//address of RT from MEM stage
+		.regw_addr_mem(regw_addr_mem),//register write address from MEM stage
+		.wb_wen_mem(wb_wen_mem),// register write enable signal feedback from MEM stage
+		//wb part
+		.regw_addr_wb(regw_addr_wb),//register write address from WB stage
+		.wb_wen_wb(wb_wen_wb),//write enable signal feedback from WB stage
+		//output
+		.pc_src(pc_src),//how would PC change to next
+		.fwd_a(fwd_a),//fowarding selection for channel A
+		.fwd_b(fwd_b),//fowarding selection for channel B
+		.fwd_mem(fwd_mem),//fowarding selection for memory
+		.is_load(is_load),//whether current instruction is LW
+		.is_store(is_store)//whether current instruction is SW
+		
+		//.mem_valid(mem_valid),//MEM.WriteReg
+		//.wb_valid(wb_valid) //WB.WriteReg
 	);
 	
 	// data path
@@ -137,7 +149,7 @@ module mips_core (
 		.debug_addr(debug_addr),
 		.debug_data(debug_data),
 		`endif
-		.inst_data_id(inst_data_ctrl),
+		.inst_data_ctrl(inst_data_ctrl),
 		.rs_used_ctrl(rs_used_ctrl),
 		.rt_used_ctrl(rt_used_ctrl),
 		.imm_ext_ctrl(imm_ext_ctrl),
@@ -158,7 +170,6 @@ module mips_core (
 		.id_rst(id_rst),
 		.id_en(id_en),
 		.id_valid(id_valid),
-		.reg_stall(reg_stall),
 		.exe_rst(exe_rst),
 		.exe_en(exe_en),
 		.exe_valid(exe_valid),
@@ -173,26 +184,27 @@ module mips_core (
 		.wb_rst(wb_rst),
 		.wb_en(wb_en),
 		.wb_valid(wb_valid),
-		.rs_rt_equal(rs_rt_equal),  //
-		.is_load_exe(is_load_exe),  //
-		.is_store_exe(is_store_exe),  //
-		.regw_addr_exe(regw_addr_exe),  //
-		.wb_wen_exe(wb_wen_exe),  //
-		.is_load_mem(is_load_mem),  //
-		.is_store_mem(is_store_mem),  //
-		.addr_rt_mem(addr_rt_mem),  //
-		.regw_addr_mem(regw_addr_mem),  //
-		.wb_wen_mem(wb_wen_mem),  //
-		.regw_addr_wb(regw_addr_wb),  //
-		.wb_wen_wb(wb_wen_wb),  //
-		.addr_rt(addr_rt),  //
-		.addr_rs(addr_rs),  //
-		.pc_src_ctrl(pc_src_ctrl),  //
-		.fwd_a_ctrl(fwd_a_ctrl),  //
-		.fwd_b_ctrl(fwd_b_ctrl),  //
-		.fwd_m_ctrl(fwd_m_ctrl),  //
-		.is_load_ctrl(is_load_ctrl),  //
-		.is_store_ctrl(is_store_ctrl)  //
+		.rs_rt_equal(rs_rt_equal),
+		.addr_rs(addr_rs),
+		.addr_rt(addr_rt),
+		.is_load_exe(is_load_exe),
+		.is_store_exe(is_store_exe),
+		.regw_addr_exe(regw_addr_exe),
+		.wb_wen_exe(wb_wen_exe),
+		.is_load_mem(is_load_mem),
+		.is_store_mem(is_store_mem),
+		.rt_addr_mem(addr_rt_mem),
+		.regw_addr_mem(regw_addr_mem),
+		.wb_wen_mem(wb_wen_mem),
+		.regw_addr_wb(regw_addr_wb),
+		.wb_wen_wb(wb_wen_wb),
+		.pc_src(pc_src),
+		.fwd_a(fwd_a),
+		.fwd_b(fwd_b),
+		.fwd_mem(fwd_mem),
+		.is_load(is_load),
+		.is_store(is_store)
+	
 	);
 	
 endmodule

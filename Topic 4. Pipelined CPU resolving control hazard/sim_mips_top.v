@@ -44,6 +44,7 @@ module sim_mips_top;
 		// Initialize Inputs
 		CCLK = 0;
 		SW = 0;
+		SW[3]=1;
 		BTNN = 0;
 		BTNE = 0;
 		BTNS = 0;
@@ -53,19 +54,21 @@ module sim_mips_top;
 		ROTCTR = 0;
 
 		// Wait 100 ns for global reset to finish
-		#300;
+		#100;
+        
 		// Add stimulus here
 
 	end
 	
 	initial forever #10 CCLK = ~CCLK;
+	initial forever #20 BTNS = ~BTNS;
 	
-	always begin
-		BTNW = 1;
-		#10;
-		BTNW = 0;
-		#100;
-	end
+	//always begin
+	//	BTNS=1;
+	//	#10;
+	//	BTNS=0;
+	//	#100;
+	//end
       
 endmodule
 

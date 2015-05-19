@@ -1,5 +1,10 @@
 // EXE B sources
 localparam
+PC_NEXT=0,
+PC_JUMP=1,
+PC_BRANCH=2;
+
+localparam
 	EXE_B_RT   = 0,
 	EXE_B_IMM  = 1;
 
@@ -34,11 +39,6 @@ localparam
 	WB_DATA_MEM   = 1;
 	//WB_DATA_LINK  = 2,
 	//WB_DATA_REGA  = 3;
-
-localparam
-	PC_NEXT = 0,
-	PC_JUMP = 1,
-	PC_BRANCH = 2;
 
 // variables
 localparam
