@@ -117,13 +117,29 @@ module controller (/*AUTOARG*/
 						rs_used = 1;
 						rt_used = 1;
 					end
+					R_FUNC_ADDU: begin
+						exe_alu_oper = EXE_ALU_ADD;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
 					R_FUNC_SUB: begin
-						exe_alu_oper = EXE_ALU_SUB; //?
-						wb_addr_src = WB_ADDR_RD; //?
-						wb_data_src = WB_DATA_ALU; //?
-						wb_wen = 1; //?
-						rs_used = 1; //?
-						rt_used = 1; //?
+						exe_alu_oper = EXE_ALU_SUB;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SUBU: begin
+						exe_alu_oper = EXE_ALU_SUB;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;						
 					end
 					R_FUNC_AND: begin
 						exe_alu_oper = EXE_ALU_AND;
@@ -149,7 +165,81 @@ module controller (/*AUTOARG*/
 						rs_used = 1;
 						rt_used = 1;
 					end
-					
+					R_FUNC_NOR: begin
+						exe_alu_oper = EXE_ALU_NOR;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SLT: begin
+						exe_alu_oper = EXE_ALU_SLT;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SLTU: begin
+						exe_alu_oper = EXE_ALU_SLTU;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SLL: begin
+						exe_alu_oper = EXE_ALU_SLL;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SRL: begin
+						exe_alu_oper = EXE_ALU_SRL;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SRA: begin
+						exe_alu_oper = EXE_ALU_SRA;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SLLV: begin
+						exe_alu_oper = EXE_ALU_SLLV;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SRLV: begin
+						exe_alu_oper = EXE_ALU_SRLV;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_SRAV: begin
+						exe_alu_oper = EXE_ALU_SRAV;
+						wb_addr_src = WB_ADDR_RD;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+						rs_used = 1;
+						rt_used = 1;
+					end
+					R_FUNC_JR: begin
+						
+					end
 					default: begin
 						unrecognized = 1;
 					end

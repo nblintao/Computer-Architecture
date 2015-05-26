@@ -51,6 +51,33 @@ module alu (
 			EXE_ALU_XOR: begin
 				result = a ^ b;
 			end
+			EXE_ALU_NOR: begin
+				result = ~(a | b);
+			end
+			EXE_ALU_SLT: begin
+				result = (a < b) ? 1 : 0;
+			end
+			EXE_ALU_SLTU: begin
+				result = ($unsigned(a) < $unsigned(b)) ? 1 : 0;
+			end
+			EXE_ALU_SLL: begin
+				result = b << a;
+			end
+			EXE_ALU_SRL: begin
+				result = b >> a;
+			end
+			EXE_ALU_SRA: begin
+				result = b >>> a;
+			end
+			EXE_ALU_SLLV: begin
+				result = b << a;
+			end
+			EXE_ALU_SRLV: begin
+				result = b >> a;
+			end
+			EXE_ALU_SRAV: begin
+				result = b >>> a;
+			end
 		endcase
 	end
 	

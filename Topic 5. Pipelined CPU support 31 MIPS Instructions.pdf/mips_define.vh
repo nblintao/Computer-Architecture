@@ -12,20 +12,21 @@ localparam
 localparam
 	EXE_ALU_ADD    = 0,
 	EXE_ALU_SUB    = 1,
-	//EXE_ALU_SLT    = 2,
+	EXE_ALU_SLT    = 2,
 	//EXE_ALU_LUI    = 3,
+	EXE_ALU_SLTU    = 3,
 	EXE_ALU_AND    = 4,
 	EXE_ALU_OR     = 5,
 	EXE_ALU_XOR    = 6;
-	//EXE_ALU_NOR    = 7,
-	//EXE_ALU_SLL    = 8,
-	//EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
+	EXE_ALU_NOR    = 7,
+	EXE_ALU_SLL    = 8,
+	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
 	//EXE_ALU_ROTR   = 10,
-	//EXE_ALU_SRA    = 11,
-	//EXE_ALU_SLLV   = 12,
-	//EXE_ALU_SRLV   = 13;  // including ROTRV(set bit 6) and SRAV(set sign)
+	EXE_ALU_SRA    = 11,
+	EXE_ALU_SLLV   = 12,
+	EXE_ALU_SRLV   = 13;  // including ROTRV(set bit 6) and SRAV(set sign)
 	//EXE_ALU_ROTRV  = 14,
-	//EXE_ALU_SRAV   = 15;
+	EXE_ALU_SRAV   = 15;
 
 // WB address sources
 localparam
@@ -47,27 +48,27 @@ localparam
 // instructions
 localparam  // bit 31:26 for instruction type
 	INST_R          = 6'b000000,  // bit 5:0 for function type
-	//R_FUNC_SLL      = 6'b000000,
-	//R_FUNC_SRL      = 6'b000010,  // including ROTR(set bit 21)
-	//R_FUNC_SRA      = 6'b000011,
-	//R_FUNC_SLLV     = 6'b000100,
-	//R_FUNC_SRLV     = 6'b000110,  // including ROTRV(set bit 6)
-	//R_FUNC_SRAV     = 6'b000111,
-	//R_FUNC_JR       = 6'b001000,
+	R_FUNC_SLL      = 6'b000000,
+	R_FUNC_SRL      = 6'b000010,  // including ROTR(set bit 21)
+	R_FUNC_SRA      = 6'b000011,
+	R_FUNC_SLLV     = 6'b000100,
+	R_FUNC_SRLV     = 6'b000110,  // including ROTRV(set bit 6)
+	R_FUNC_SRAV     = 6'b000111,
+	R_FUNC_JR       = 6'b001000,
 	//R_FUNC_JALR     = 6'b001001,
 	//R_FUNC_MOVZ     = 6'b001010,
 	//R_FUNC_MOVN     = 6'b001011,
 	//R_FUNC_SYSCALL  = 6'b001100,
 	R_FUNC_ADD      = 6'b100000,
-	//R_FUNC_ADDU     = 6'b100001,
+	R_FUNC_ADDU     = 6'b100001,
 	R_FUNC_SUB      = 6'b100010,
-	//R_FUNC_SUBU     = 6'b100011,
+	R_FUNC_SUBU     = 6'b100011,
 	R_FUNC_AND      = 6'b100100,
 	R_FUNC_OR       = 6'b100101,
 	R_FUNC_XOR      = 6'b100110,
-	//R_FUNC_NOR      = 6'b100111,
-	//R_FUNC_SLT      = 6'b101010,
-	//R_FUNC_SLTU     = 6'b101011,
+	R_FUNC_NOR      = 6'b100111,
+	R_FUNC_SLT      = 6'b101010,
+	R_FUNC_SLTU     = 6'b101011,
 	//R_FUNC_TGE      = 6'b110000,
 	//R_FUNC_TGEU     = 6'b110001,
 	//R_FUNC_TLT      = 6'b110010,

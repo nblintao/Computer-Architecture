@@ -132,6 +132,7 @@ module datapath (
 	reg [31:0] inst_addr_exe;
 	reg [31:0] inst_data_exe;
 	reg [31:0] inst_addr_next_exe;
+	reg [1:0] exe_a_src_exe;
 	reg exe_b_src_exe;
 	//reg [4:0] regw_addr_exe;
 	
@@ -337,8 +338,10 @@ module datapath (
 		end
 	end
 	
-	assign opa_exe=rs_data_exe,
-			 opb_exe=exe_b_src_exe?imm_data_exe:rt_data_exe;
+	assign opa_exe = exe_a_src_exe[1] ? /*2*///TODO
+			:exe_a_src_exe[0] ? rs_data_exe/*1*/
+			:/*0*/;
+	assign opb_exe = exe_b_src_exe?imm_data_exe:rt_data_exe;
 	/*
 	always @(*) begin
 		opa_exe = rs_data_exe;
