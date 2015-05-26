@@ -3,4 +3,4 @@
 //`define DEBUG
 
 // uncomment below macros when simulating this project
-`define SIMULATING
+//`define SIMULATING

@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/inst_addr" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">inst_addr[31:0]</obj_property>
       <obj_property name="ObjectShortName">inst_addr[31:0]</obj_property>
@@ -131,6 +131,22 @@
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/wb_wen_wb" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">wb_wen_wb</obj_property>
       <obj_property name="ObjectShortName">wb_wen_wb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/wb_addr_src_ctrl" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_addr_src_ctrl</obj_property>
+      <obj_property name="ObjectShortName">wb_addr_src_ctrl</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_addr_id" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regw_addr_id[4:0]</obj_property>
+      <obj_property name="ObjectShortName">regw_addr_id[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_addr_exe" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regw_addr_exe[4:0]</obj_property>
+      <obj_property name="ObjectShortName">regw_addr_exe[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_addr_mem" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">regw_addr_mem[4:0]</obj_property>
+      <obj_property name="ObjectShortName">regw_addr_mem[4:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/regw_addr_wb" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">regw_addr_wb[4:0]</obj_property>

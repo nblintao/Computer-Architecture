@@ -29,7 +29,7 @@ module datapath (
 	input wire [3:0] exe_alu_oper_ctrl,  // ALU operation type
 	input wire mem_ren_ctrl,  // memory read enable signal
 	input wire mem_wen_ctrl,  // memory write enable signal
-	input wire wb_addr_src_ctrl,  // address source to write data back to registers
+	input wire [1:0] wb_addr_src_ctrl,  // address source to write data back to registers
 	input wire wb_data_src_ctrl,  // data source of data being written back to registers
 	input wire wb_wen_ctrl,  // register write enable signal
 	input wire is_branch_ctrl,  // whether current instruction is a jump instruction
