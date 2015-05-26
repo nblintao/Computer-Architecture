@@ -20,8 +20,8 @@ localparam
 	EXE_ALU_ADD    = 0,
 	EXE_ALU_SUB    = 1,
 	EXE_ALU_SLT    = 2,
-	//EXE_ALU_LUI    = 3,
-	EXE_ALU_SLTU    = 3,
+	EXE_ALU_LUI    = 3,
+	
 	EXE_ALU_AND    = 4,
 	EXE_ALU_OR     = 5,
 	EXE_ALU_XOR    = 6;
@@ -29,6 +29,7 @@ localparam
 	EXE_ALU_SLL    = 8,
 	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
 	//EXE_ALU_ROTR   = 10,
+	EXE_ALU_SLTU    = 10, //overload!!!Tao.
 	EXE_ALU_SRA    = 11,
 	EXE_ALU_SLLV   = 12,
 	EXE_ALU_SRLV   = 13;  // including ROTRV(set bit 6) and SRAV(set sign)

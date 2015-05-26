@@ -78,6 +78,9 @@ module alu (
 			EXE_ALU_SRAV: begin
 				result = b >>> a;
 			end
+			EXE_ALU_SLTU:begin
+				result = {b[15:0],16'b0};
+			end
 		endcase
 	end
 	

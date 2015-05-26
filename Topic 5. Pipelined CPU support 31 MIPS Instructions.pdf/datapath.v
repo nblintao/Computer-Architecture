@@ -255,7 +255,7 @@ module datapath (
 		addr_rs = (pc_src == PC_JR) ? 31 : inst_data_ctrl[25:21],
 		addr_rt = inst_data_ctrl[20:16],
 		addr_sa = inst_data_ctrl[10:6],
-		data_imm = imm_ext_ctrl ? {{16{inst_data_ctrl[15]}},inst_data_ctrl[15:0]} : inst_data_ctrl[15:0];
+		data_imm = imm_ext_ctrl ? {{16{inst_data_ctrl[15]}},inst_data_ctrl[15:0]} : {16'b0, inst_data_ctrl[15:0]};
 	
 	
 	
