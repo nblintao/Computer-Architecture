@@ -1,14 +1,16 @@
-// EXE B sources
+// PC sources
 localparam
 PC_NEXT=0,
 PC_JUMP=1,
-PC_BRANCH=2;
+PC_BRANCH=2,
 PC_JR=3;
 
 localparam
+// EXE A sources
 	EXE_A_SA = 0,
 	EXE_A_RS = 1,
 	EXE_A_PC = 2,
+// EXE B sources
 	EXE_B_RT   = 0,
 	EXE_B_IMM  = 1,
 	EXE_B_FOUR = 2;

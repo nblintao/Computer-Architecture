@@ -21,7 +21,7 @@ module datapath (
 	`endif
 	// control signals
 	output reg [31:0] inst_data_ctrl,  // instruction
-	input wire rs_used_ctrl,  // whether RS is used
+	input wire rs_used_ctrl, 	 // whether RS is used
 	input wire rt_used_ctrl,  // whether RT is used
 	input wire imm_ext_ctrl,  // whether using sign extended to immediate data
 	input wire [1:0] exe_a_src_ctrl,  // data source of operand A for ALU
@@ -123,6 +123,7 @@ module datapath (
 	reg [4:0] regw_addr_id;
 	reg [31:0] opa_id, opb_id;
 	//wire [4:0] addr_rs, addr_rt;
+	wire [4:0] addr_sa;
 	wire [31:0] data_rs, data_rt, data_imm;
 	reg [31:0] imm_data_exe;
 	//reg AFromEx,BFromEx,AFromMem,BFromMem;	
@@ -253,6 +254,7 @@ module datapath (
 	assign
 		addr_rs = (pc_src == PC_JR) ? 31 : inst_data_ctrl[25:21],
 		addr_rt = inst_data_ctrl[20:16],
+		addr_sa = inst_data_ctrl[10:6],
 		data_imm = imm_ext_ctrl ? {{16{inst_data_ctrl[15]}},inst_data_ctrl[15:0]} : inst_data_ctrl[15:0];
 	
 	
@@ -352,7 +354,7 @@ module datapath (
 	// assign opb_exe = exe_b_src_exe?imm_data_exe:rt_data_exe;
 	always@(*) begin
 		case(exe_a_src_exe)
-			EXE_A_SA: opa_exe = ;//TODO
+			EXE_A_SA: opa_exe = {27'b0, addr_sa};
 			EXE_A_RS: opa_exe = rs_data_exe;
 			EXE_A_PC: opa_exe = inst_addr_next_exe;
 		endcase

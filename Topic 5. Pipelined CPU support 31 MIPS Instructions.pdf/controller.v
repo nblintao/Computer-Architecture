@@ -92,6 +92,7 @@ module controller (/*AUTOARG*/
 	// instruction decode
 	always @(*) begin
 		imm_ext = 0;
+		exe_a_src = EXE_A_RS;
 		exe_b_src = EXE_B_RT;
 		exe_alu_oper = EXE_ALU_ADD;
 		mem_ren = 0;
@@ -192,6 +193,7 @@ module controller (/*AUTOARG*/
 					end
 					R_FUNC_SLL: begin
 						exe_alu_oper = EXE_ALU_SLL;
+						exe_a_src = EXE_A_SA;
 						wb_addr_src = WB_ADDR_RD;
 						wb_data_src = WB_DATA_ALU;
 						wb_wen = 1;
@@ -200,6 +202,7 @@ module controller (/*AUTOARG*/
 					end
 					R_FUNC_SRL: begin
 						exe_alu_oper = EXE_ALU_SRL;
+						exe_a_src = EXE_A_SA;
 						wb_addr_src = WB_ADDR_RD;
 						wb_data_src = WB_DATA_ALU;
 						wb_wen = 1;
@@ -208,6 +211,7 @@ module controller (/*AUTOARG*/
 					end
 					R_FUNC_SRA: begin
 						exe_alu_oper = EXE_ALU_SRA;
+						exe_a_src = EXE_A_SA;
 						wb_addr_src = WB_ADDR_RD;
 						wb_data_src = WB_DATA_ALU;
 						wb_wen = 1;
