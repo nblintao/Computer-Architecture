@@ -238,7 +238,7 @@ module controller (/*AUTOARG*/
 						rt_used = 1;
 					end
 					R_FUNC_JR: begin
-						
+						rs_used = 1;
 					end
 					default: begin
 						unrecognized = 1;
