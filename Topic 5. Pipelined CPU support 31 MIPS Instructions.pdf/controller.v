@@ -289,7 +289,7 @@ module controller (/*AUTOARG*/
 				is_store=1;// new signal
 			end
 			INST_JAL: begin
-				pc_src=PC_JUMP;
+				pc_src = PC_JUMP;
 				wb_addr_src = WB_ADDR_LINK;
 				wb_data_src = WB_DATA_ALU;
 				wb_wen = 1;
