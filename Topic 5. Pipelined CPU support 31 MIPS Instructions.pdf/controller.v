@@ -27,7 +27,8 @@ module controller (/*AUTOARG*/
 
 
 	output reg imm_ext,  // whether using sign extended to immediate data
-	output reg exe_b_src,  // data source of operand B for ALU
+	output reg [1:0] exe_a_src,  // data source of operand A for ALU
+	output reg [1:0] exe_b_src,  // data source of operand B for ALU
 	output reg [3:0] exe_alu_oper,  // ALU operation type
 	output reg mem_ren,  // memory read enable signal
 	output reg mem_wen,  // memory write enable signal
@@ -239,12 +240,14 @@ module controller (/*AUTOARG*/
 					end
 					R_FUNC_JR: begin
 						rs_used = 1;
+						pc_src = PC_JR;
 					end
 					default: begin
 						unrecognized = 1;
 					end
 				endcase
 			end
+			
 			INST_BEQ: begin
 				exe_b_src = EXE_B_IMM; 
 				
@@ -280,6 +283,49 @@ module controller (/*AUTOARG*/
 				rs_used = 1;
 				rt_used = 1; 
 				is_store=1;// new signal
+			end
+			INST_JAL: begin
+				pc_src=PC_JUMP;
+				wb_addr_src = WB_ADDR_LINK;
+				wb_data_src = WB_DATA_ALU;
+				wb_wen = 1;
+				exe_a_src = EXE_A_PC;
+				exe_b_src = EXE_B_FOUR;
+				exe_alu_oper = EXE_ALU_ADD;
+			end
+			INST_BNE: begin
+				exe_b_src = EXE_B_IMM; 
+				if(!rs_rt_equal)begin
+					pc_src=PC_BRANCH;
+				end				
+				imm_ext = 1; 
+				is_branch = 1; 
+				rs_used = 1; 
+				rt_used = 0; 				
+			end
+			INST_ADDI: begin
+				
+			end
+			INST_ADDIU: begin
+				
+			end
+			INST_SLTI: begin
+				
+			end
+			INST_SLTIU: begin
+				
+			end
+			INST_ANDI: begin
+				
+			end
+			INST_ORI: begin
+				
+			end
+			INST_XORI: begin
+				
+			end
+			INST_LUI: begin
+				
 			end
 			default: begin
 				unrecognized = 1;

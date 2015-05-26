@@ -24,7 +24,8 @@ module datapath (
 	input wire rs_used_ctrl,  // whether RS is used
 	input wire rt_used_ctrl,  // whether RT is used
 	input wire imm_ext_ctrl,  // whether using sign extended to immediate data
-	input wire exe_b_src_ctrl,  // data source of operand B for ALU
+	input wire [1:0] exe_a_src_ctrl,  // data source of operand A for ALU
+	input wire [1:0] exe_b_src_ctrl,  // data source of operand B for ALU
 	input wire [3:0] exe_alu_oper_ctrl,  // ALU operation type
 	input wire mem_ren_ctrl,  // memory read enable signal
 	input wire mem_wen_ctrl,  // memory write enable signal
@@ -133,7 +134,7 @@ module datapath (
 	reg [31:0] inst_data_exe;
 	reg [31:0] inst_addr_next_exe;
 	reg [1:0] exe_a_src_exe;
-	reg exe_b_src_exe;
+	reg [1:0] exe_b_src_exe;
 	//reg [4:0] regw_addr_exe;
 	
 	// new signal
@@ -146,6 +147,8 @@ module datapath (
 	// MEM signals
 	reg [31:0] inst_addr_mem;
 	reg [31:0] inst_data_mem;
+	reg [31:0] inst_addr_next_mem;
+
 
 	// new signal
 	//reg [4:0] rs_addr_mem,rt_addr_mem;
@@ -248,7 +251,7 @@ module datapath (
 	end
 	
 	assign
-		addr_rs = inst_data_ctrl[25:21],
+		addr_rs = (pc_src == PC_JR) ? 31 : inst_data_ctrl[25:21],
 		addr_rt = inst_data_ctrl[20:16],
 		data_imm = imm_ext_ctrl ? {{16{inst_data_ctrl[15]}},inst_data_ctrl[15:0]} : inst_data_ctrl[15:0];
 	
@@ -314,13 +317,16 @@ module datapath (
 			wb_wen_exe <= 0;
 			is_load_exe <= 0;
 			is_store_exe <= 0;
+			exe_a_src_exe<=0;
 			exe_b_src_exe<=0;
 		end
 		else if (exe_en) begin
 			exe_valid <= id_valid;
 			inst_addr_exe <= inst_addr_id;
+			inst_addr_next_exe <= inst_addr_next_id;
 			inst_data_exe <= inst_data_ctrl;
 			regw_addr_exe <= regw_addr_id;
+			exe_a_src_exe<=exe_a_src_ctrl;
 			exe_b_src_exe<=exe_b_src_ctrl;
 			
 			//pc_src_ctrl <= pc_src;
@@ -340,10 +346,23 @@ module datapath (
 		end
 	end
 	
-	assign opa_exe = exe_a_src_exe[1] ? /*2*///TODO
-			:exe_a_src_exe[0] ? rs_data_exe/*1*/
-			:/*0*/;
-	assign opb_exe = exe_b_src_exe?imm_data_exe:rt_data_exe;
+	// assign opa_exe =  = exe_a_src_exe[1] ? /*2*///TODO
+	// 		:exe_a_src_exe[0] ? rs_data_exe/*1*/
+	// 		:/*0*/;
+	// assign opb_exe = exe_b_src_exe?imm_data_exe:rt_data_exe;
+	always@(*) begin
+		case(exe_a_src_exe)
+			EXE_A_SA: opa_exe = ;//TODO
+			EXE_A_RS: opa_exe = rs_data_exe;
+			EXE_A_PC: opa_exe = inst_addr_next_exe;
+		endcase
+		case(exe_b_src_exe)
+			EXE_B_RT  : opb_exe = rt_data_exe;
+			EXE_B_IMM : opb_exe = imm_data_exe;
+			EXE_B_FOUR : opb_exe = 4;
+		endcase
+	end
+
 	/*
 	always @(*) begin
 		opa_exe = rs_data_exe;
@@ -386,6 +405,7 @@ module datapath (
 		if (mem_rst) begin
 			mem_valid <= 0;
 			inst_addr_mem <= 0;
+			inst_addr_next_mem <= 0;
 			inst_data_mem <= 0;
 			regw_addr_mem <= 0;
 			opa_mem <= 0;
@@ -401,6 +421,7 @@ module datapath (
 		else if (mem_en) begin
 			mem_valid <= exe_valid;
 			inst_addr_mem <= inst_addr_exe;
+			inst_addr_next_mem <= inst_addr_exe;
 			inst_data_mem <= inst_data_exe;
 			regw_addr_mem <= regw_addr_exe;
 			//

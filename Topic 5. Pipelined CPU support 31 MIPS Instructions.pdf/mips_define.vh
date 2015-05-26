@@ -3,10 +3,15 @@ localparam
 PC_NEXT=0,
 PC_JUMP=1,
 PC_BRANCH=2;
+PC_JR=3;
 
 localparam
+	EXE_A_SA = 0,
+	EXE_A_RS = 1,
+	EXE_A_PC = 2,
 	EXE_B_RT   = 0,
-	EXE_B_IMM  = 1;
+	EXE_B_IMM  = 1,
+	EXE_B_FOUR = 2;
 
 // EXE ALU operations
 localparam
@@ -32,7 +37,7 @@ localparam
 localparam
 	WB_ADDR_RD    = 0,
 	WB_ADDR_RT    = 1;
-	//WB_ADDR_LINK  = 2;
+	WB_ADDR_LINK  = 2;
 
 // WB data sources
 localparam
@@ -87,19 +92,19 @@ localparam  // bit 31:26 for instruction type
 	//I_FUNC_BLTZAL   = 5'b10000,
 	//I_FUNC_BGEZAL   = 5'b10001,
 	INST_J          = 6'b000010,
-	//INST_JAL        = 6'b000011,
+	INST_JAL        = 6'b000011,
 	INST_BEQ        = 6'b000100,
-	//INST_BNE        = 6'b000101,
+	INST_BNE        = 6'b000101,
 	//INST_BLEZ       = 6'b000110,
 	//INST_BGTZ       = 6'b000111,
-	//INST_ADDI       = 6'b001000,
-	//INST_ADDIU      = 6'b001001,
-	//INST_SLTI       = 6'b001010,
-	//INST_SLTIU      = 6'b001011,
-	//INST_ANDI       = 6'b001100,
-	//INST_ORI        = 6'b001101,
-	//INST_XORI       = 6'b001110,
-	//INST_LUI        = 6'b001111,
+	INST_ADDI       = 6'b001000,
+	INST_ADDIU      = 6'b001001,
+	INST_SLTI       = 6'b001010,
+	INST_SLTIU      = 6'b001011,
+	INST_ANDI       = 6'b001100,
+	INST_ORI        = 6'b001101,
+	INST_XORI       = 6'b001110,
+	INST_LUI        = 6'b001111,
 	//INST_CP0        = 6'b010000,  // bit 24:21 for function type when bit 25 is not set, bit 5:0 for co type when bit 25 is set
 	//CP_FUNC_MF     = 4'b0000,
 	//CP_FUNC_MT     = 4'b0100,

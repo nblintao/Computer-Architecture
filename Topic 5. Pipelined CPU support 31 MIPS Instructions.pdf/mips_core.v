@@ -31,7 +31,8 @@ module mips_core (
 	wire [31:0] inst_data_ctrl;
 	
 	wire imm_ext_ctrl;
-	wire exe_b_src_ctrl;
+	wire [1:0] exe_a_src_ctrl;
+	wire [1:0] exe_b_src_ctrl;
 	wire [3:0] exe_alu_oper_ctrl;
 	wire mem_ren_ctrl;
 	wire mem_wen_ctrl;
@@ -85,6 +86,7 @@ module mips_core (
 		`endif
 		.inst(inst_data_ctrl),
 		.imm_ext(imm_ext_ctrl),
+		.exe_a_src(exe_a_src_ctrl),
 		.exe_b_src(exe_b_src_ctrl),
 		.exe_alu_oper(exe_alu_oper_ctrl),
 		.mem_ren(mem_ren_ctrl),
@@ -153,6 +155,7 @@ module mips_core (
 		.rs_used_ctrl(rs_used_ctrl),
 		.rt_used_ctrl(rt_used_ctrl),
 		.imm_ext_ctrl(imm_ext_ctrl),
+		.exe_a_src_ctrl(exe_a_src_ctrl),
 		.exe_b_src_ctrl(exe_b_src_ctrl),
 		.exe_alu_oper_ctrl(exe_alu_oper_ctrl),
 		.mem_ren_ctrl(mem_ren_ctrl),
