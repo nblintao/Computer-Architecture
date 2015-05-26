@@ -24,7 +24,7 @@ localparam
 	
 	EXE_ALU_AND    = 4,
 	EXE_ALU_OR     = 5,
-	EXE_ALU_XOR    = 6;
+	EXE_ALU_XOR    = 6,
 	EXE_ALU_NOR    = 7,
 	EXE_ALU_SLL    = 8,
 	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
@@ -32,14 +32,14 @@ localparam
 	EXE_ALU_SLTU    = 10, //overload!!!Tao.
 	EXE_ALU_SRA    = 11,
 	EXE_ALU_SLLV   = 12,
-	EXE_ALU_SRLV   = 13;  // including ROTRV(set bit 6) and SRAV(set sign)
+	EXE_ALU_SRLV   = 13,  // including ROTRV(set bit 6) and SRAV(set sign)
 	//EXE_ALU_ROTRV  = 14,
 	EXE_ALU_SRAV   = 15;
 
 // WB address sources
 localparam
 	WB_ADDR_RD    = 0,
-	WB_ADDR_RT    = 1;
+	WB_ADDR_RT    = 1,
 	WB_ADDR_LINK  = 2;
 
 // WB data sources

@@ -348,22 +348,29 @@ module datapath (
 		end
 	end
 	
-	// assign opa_exe =  = exe_a_src_exe[1] ? /*2*///TODO
-	// 		:exe_a_src_exe[0] ? rs_data_exe/*1*/
-	// 		:/*0*/;
-	// assign opb_exe = exe_b_src_exe?imm_data_exe:rt_data_exe;
-	always@(*) begin
-		case(exe_a_src_exe)
-			EXE_A_SA: opa_exe = {27'b0, addr_sa};
-			EXE_A_RS: opa_exe = rs_data_exe;
-			EXE_A_PC: opa_exe = inst_addr_next_exe;
-		endcase
-		case(exe_b_src_exe)
-			EXE_B_RT  : opb_exe = rt_data_exe;
-			EXE_B_IMM : opb_exe = imm_data_exe;
-			EXE_B_FOUR : opb_exe = 4;
-		endcase
-	end
+	assign opa_exe = exe_a_src_exe[1] ? inst_addr_next_exe/*2*/
+			:exe_a_src_exe[0] ? rs_data_exe/*1*/
+			:{27'b0, addr_sa}/*0*/;
+
+	// always@(*) begin
+	// 	case(exe_a_src_exe)
+	// 		EXE_A_SA: opa_exe = {27'b0, addr_sa};
+	// 		EXE_A_RS: opa_exe = rs_data_exe;
+	// 		EXE_A_PC: opa_exe = inst_addr_next_exe;
+	// 	endcase
+	// end
+
+	assign opb_exe = (exe_b_src_exe==EXE_B_FOUR) ? 4/*2*/
+			:(exe_b_src_exe==EXE_B_IMM) ? imm_data_exe/*1*/
+			:rt_data_exe/*0*/;
+
+	// always@(*)begin
+	// 	case(exe_b_src_exe)
+	// 		EXE_B_RT  : opb_exe = rt_data_exe;
+	// 		EXE_B_IMM : opb_exe = imm_data_exe;
+	// 		EXE_B_FOUR : opb_exe = 4;
+	// 	endcase
+	// end
 
 	/*
 	always @(*) begin
