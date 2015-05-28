@@ -43,6 +43,8 @@ module cp0(
 	wire ir;
 	reg ir_wait = 0, ir_valid = 1;
 	reg eret = 0;
+	reg [31:0] EHBR;
+	reg [31:0] EPCR;
 	always @(posedge clk) begin
 		if (rst)
 			ir_wait <= 0;
@@ -61,4 +63,40 @@ module cp0(
 	end
 	assign ir = ir_en & ir_wait & ir_valid;
 	
+	always @(posedge clk) begin
+		jump_en = 0;
+		if (ir||eret)
+			jump_en = 1;	
+	end
+	
+	always @(posedge clk) begin
+		if(ir)
+			EPCR = ret_addr;
+			jump_addr = EHBR;
+	end	
+	
+	always @(posedge clk) begin
+		case(oper)
+			EXE_CP_MFC0: begin	//MFC0
+				case(addr_r)
+					5'b00010: data_r = EPCR;
+					5'b00011: data_r = EHBR;
+					default: data_r = 0;
+				endcase
+			end				
+			EXE_CP_MTC0: begin	//MTC0
+				case(addr_w)
+					5'b00010: EPCR = data_w;
+					5'b00011: EHBR = data_w;
+					default: ;
+				endcase
+			end
+			EXE_CP0_ERET: begin	//ERET
+				eret = 1;
+				jump_addr = EPCR;
+			end
+			default:;
+		endcase
+	end
+
 endmodule

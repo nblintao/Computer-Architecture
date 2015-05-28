@@ -1,16 +1,5 @@
-// PC sources
-localparam
-PC_NEXT=0,
-PC_JUMP=1,
-PC_BRANCH=2,
-PC_JR=3;
-
-localparam
-// EXE A sources
-	EXE_A_SA = 0,
-	EXE_A_RS = 1,
-	EXE_A_PC = 2,
 // EXE B sources
+localparam
 	EXE_B_RT   = 0,
 	EXE_B_IMM  = 1,
 	EXE_B_FOUR = 2;
@@ -21,7 +10,6 @@ localparam
 	EXE_ALU_SUB    = 1,
 	EXE_ALU_SLT    = 2,
 	EXE_ALU_LUI    = 3,
-	
 	EXE_ALU_AND    = 4,
 	EXE_ALU_OR     = 5,
 	EXE_ALU_XOR    = 6,
@@ -29,24 +17,25 @@ localparam
 	EXE_ALU_SLL    = 8,
 	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
 	//EXE_ALU_ROTR   = 10,
-	EXE_ALU_SLTU    = 10, //overload!!!Tao.
 	EXE_ALU_SRA    = 11,
-	EXE_ALU_SLLV   = 12,
-	EXE_ALU_SRLV   = 13,  // including ROTRV(set bit 6) and SRAV(set sign)
+	EXE_ALU_SLTU   = 12
+	//EXE_ALU_SLLV   = 12,
+	EXE_ALU_B =13;
+	//EXE_ALU_SRLV   = 13,  // including ROTRV(set bit 6) and SRAV(set sign)
 	//EXE_ALU_ROTRV  = 14,
-	EXE_ALU_SRAV   = 15;
+	//EXE_ALU_SRAV   = 15;
 
 // WB address sources
 localparam
 	WB_ADDR_RD    = 0,
-	WB_ADDR_RT    = 1,
-	WB_ADDR_LINK  = 2;
+	WB_ADDR_RT    = 1;
+	//WB_ADDR_LINK  = 2;
 
 // WB data sources
 localparam
 	WB_DATA_ALU   = 0,
-	WB_DATA_MEM   = 1;
-	//WB_DATA_LINK  = 2,
+	WB_DATA_MEM   = 1,
+	WB_DATA_LINK  = 2;
 	//WB_DATA_REGA  = 3;
 
 // variables
@@ -108,7 +97,7 @@ localparam  // bit 31:26 for instruction type
 	INST_ORI        = 6'b001101,
 	INST_XORI       = 6'b001110,
 	INST_LUI        = 6'b001111,
-	//INST_CP0        = 6'b010000,  // bit 24:21 for function type when bit 25 is not set, bit 5:0 for co type when bit 25 is set
+	INST_CP0        = 6'b010000,  // bit 24:21 for function type when bit 25 is not set, bit 5:0 for co type when bit 25 is set
 	//CP_FUNC_MF     = 4'b0000,
 	//CP_FUNC_MT     = 4'b0100,
 	//CP0_CO_ERET     = 6'b011000,
@@ -155,3 +144,22 @@ localparam
 	GPR_SP = 29,
 	GPR_FP = 30,
 	GPR_RA = 31;
+
+// CP0 registers
+localparam
+	//CP0_SR = 0,
+	//CP0_EAR = 1,
+	CP0_EPCR = 2,
+	CP0_EHBR = 3;
+	//CP0_IER = 4,
+	//CP0_ICR = 5,
+	//CP0_PDBR = 6,
+	//CP0_TIR = 7,
+	//CP0_WDR = 8;
+	
+// EXE CP operations
+localparam
+	EXE_CP_NONE = 0,
+	EXE_CP_MFC0 = 1,
+	EXE_CP_MTC0 = 2,
+	EXE_CP0_ERET = 3;

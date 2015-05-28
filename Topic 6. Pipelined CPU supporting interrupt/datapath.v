@@ -71,9 +71,16 @@ module datapath (
 	output reg wb_wen_wb,
 	
 	input wire [1:0] ForwardA,
-	input wire [1:0] ForwardB,
+	input wire [2:0] ForwardB,
 	input wire fwdm,
-	input wire [1:0] pc_src
+	input wire [1:0] pc_src,
+
+	output wire [4:0] cp_addr_r,//out 5
+	input wire [31:0] cp_data_r,//in 32
+	output wire [31:0] cp_data_w,//out 32
+	output wire [31:0] ret_addr,//out 32
+	input wire jump_en,//in 1
+    input wire [31:0] jump_addr//in 32
 	);
 	reg [31:0] inst_addr_id;
 	reg [31:0] inst_addr_exe;
@@ -82,6 +89,9 @@ module datapath (
 	reg [31:0] inst_data_mem;
 	
 	reg [31:0] regw_data_wb;
+
+	wire [1:0] pc_src_id;
+	wire [1:0] new_pc_src;
 	
 	`include "mips_define.vh"
 	
@@ -94,6 +104,7 @@ module datapath (
 	
 	// IF signals
 	wire [31:0] inst_addr_next;
+	reg [31:0] naive_inst_addr
 	
 	// ID signals
 	
@@ -118,7 +129,7 @@ module datapath (
 	wire [31:0] alu_out_exe;
 	reg [4:0] addr_rs_exe;
 	reg [1:0] ForwardA_exe;
-	reg [1:0] ForwardB_exe;
+	reg [2:0] ForwardB_exe;
 	// MEM signals
 	
 	reg [31:0] opa_mem, data_rt_mem;
@@ -187,25 +198,28 @@ module datapath (
 		pc_src = 2'b01;
 	end*/
 	
+	assign ret_addr = (pc_src_id!=2'b00)? inst_addr_id : inst_addr ;
 	
 	always @(posedge clk) begin
 		if (if_rst) begin
 			if_valid <= 0;
 			inst_ren <= 0;
-			inst_addr <= 0;
+			naive_inst_addr <= 0;
 		end
 		else if (if_en) begin
 			if_valid <= 1;
 			inst_ren <= 1;
 			case (pc_src)
-				2'b00: inst_addr <= inst_addr_next;
-				2'b01: inst_addr <= {inst_addr_next_id[31:28],inst_data_ctrl[25:0],2'b0};
-				2'b10: inst_addr <= opa_id;
-				2'b11: inst_addr <= inst_addr_next_id + (data_imm << 2);
+				2'b00: naive_inst_addr <= inst_addr_next;
+				2'b01: naive_inst_addr <= {inst_addr_next_id[31:28],inst_data_ctrl[25:0],2'b0};
+				2'b10: naive_inst_addr <= opa_id;
+				2'b11: naive_inst_addr <= inst_addr_next_id + (data_imm << 2);
 			endcase
 			//inst_addr <= is_branch_mem ? alu_out_mem : inst_addr_next;
 		end
 	end
+
+	assign inst_addr = jump_en ? jump_addr : naive_inst_addr;
 	
 	// ID stage
 	always @(posedge clk) begin
@@ -214,12 +228,14 @@ module datapath (
 			inst_addr_id <= 0;
 			inst_data_ctrl <= 0;
 			inst_addr_next_id <= 0;
+			pc_src_id <= 0;
 		end
 		else if (id_en) begin
 			id_valid <= if_valid;
 			inst_addr_id <= inst_addr;
 			inst_data_ctrl <= inst_data;
 			inst_addr_next_id <= inst_addr_next;
+			pc_src_id <= pc_src;
 		end
 	end
 	
@@ -228,6 +244,9 @@ module datapath (
 		addr_rt = inst_data_ctrl[20:16],
 		data_imm = imm_ext_ctrl ? {{16{inst_data_ctrl[15]}},inst_data_ctrl[15:0]} : {16'b0,inst_data_ctrl[15:0]};
 	
+
+	assign cp_addr_r = inst_data_ctrl[15:11];//RD
+
 	always @(*) begin
 		regw_addr_id = inst_data_ctrl[15:11];
 		case (wb_addr_src_ctrl)
@@ -308,12 +327,15 @@ module datapath (
 			2'b11:opa_id <= mem_din;
 		endcase
 		case (ForwardB)
-			2'b00:opb_id <= data_rt;
-			2'b01:opb_id <= alu_out_exe;
-			2'b10:opb_id <= alu_out_mem;
-			2'b11:opb_id <= mem_din;
+			3'b000:opb_id <= data_rt;
+			3'b001:opb_id <= alu_out_exe;
+			3'b010:opb_id <= alu_out_mem;
+			3'b011:opb_id <= mem_din;
+			3'b100:opb_id <= cp_data_r;
 		endcase
 	end
+
+	assign cp_data_w = opb_id;
 	
 	always @(*) begin
 	if (opa_id == opb_id)

@@ -17,7 +17,7 @@ module mips_top (
 	
 	// anti-jitter
 	wire [3:0] switch;
-	wire btn_reset, btn_step;
+	wire btn_reset, btn_step, btn_int;
 	wire disp_prev, disp_next;
 	`ifndef SIMULATING
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
@@ -39,6 +39,8 @@ module mips_top (
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
 		AJ_BTNS (.clk(CCLK), .rst(1'b0), .sig_i(BTNS), .sig_o(btn_step));
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
+		AJ_BTNS (.clk(CCLK), .rst(1'b0), .sig_i(BTNW), .sig_o(btn_int));
+	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
 		AJ_BTNW (.clk(CCLK), .rst(1'b0), .sig_i(BTNW), .sig_o());
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(20000), .INIT_VALUE(1))
 		AJBTNN (.clk(CCLK), .rst(1'b0), .sig_i(BTNN), .sig_o(btn_reset));
@@ -48,7 +50,9 @@ module mips_top (
 		disp_prev = ROTA,
 		disp_next = ROTB,
 		btn_step = BTNS,
+		btn_int = BTNW,
 		btn_reset = BTNN;
+
 	`endif
 	
 	// clock generator
@@ -157,7 +161,8 @@ module mips_top (
 		.mem_wen(mem_wen),
 		.mem_addr(mem_addr),
 		.mem_dout(mem_data_w),
-		.mem_din(mem_data_r)
+		.mem_din(mem_data_r),
+		.ir_in(btn_step)
 		);
 	
 	// IF YOU ARE NOT SURE ABOUT INITIALIZING MEMORY USING 'READMEMH', PLEASE REPLACE BELOW MODULE TO IP CORE

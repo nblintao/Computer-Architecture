@@ -41,7 +41,7 @@ module controller (/*AUTOARG*/
 	 output reg wb_wen, // register write enable signal
 
     output reg [1:0] fwd_a, // forwarding selection for channel A
-    output reg [1:0] fwd_b, // forwarding selection for channel B
+    output reg [2:0] fwd_b, // forwarding selection for channel B
     output reg fwd_m, // forwarding selection for memory
     output reg is_load, // whether current instruction is LW
 	 output reg is_store, // whether current instruction is SW
@@ -62,7 +62,10 @@ module controller (/*AUTOARG*/
     input wire mem_valid,
     output reg wb_rst,
     output reg wb_en,
-    input wire wb_valid
+    input wire wb_valid,
+
+    output reg [1:0] cp_oper,//out 2
+    output wire ir_en//out 1
 );
 
 	`include "mips_define.vh"
@@ -95,6 +98,7 @@ module controller (/*AUTOARG*/
 		is_branch = 0;
 		rs_used = 0;
 		rt_used = 0;
+		cp_oper = EXE_CP_NONE;
 		unrecognized = 0;
 		case (inst[31:26])
 			INST_R: begin
@@ -394,6 +398,23 @@ module controller (/*AUTOARG*/
 				wb_data_src = WB_DATA_ALU;
 				wb_wen = 1;
 			end
+			INST_CP0:begin
+				case(inst[25:21])
+					5'b1XXXX: cp_oper = EXE_CP0_ERET;
+					5'b00000: begin
+						cp_oper = EXE_CP_MFC0; 
+						exe_alu_oper = EXE_ALU_B;
+						// rt_used = 1;
+						wb_addr_src = WB_ADDR_RT;
+						wb_data_src = WB_DATA_ALU;
+						wb_wen = 1;
+					end
+					5'b00100: begin
+						cp_oper = EXE_CP_MTC0;
+						rt_used = 1;
+					end
+				endcase 
+			end
 			default: begin
 				unrecognized = 1;
 			end
@@ -446,6 +467,10 @@ module controller (/*AUTOARG*/
 			exe_rst = 1;
 		end
 	end
+
+	//TODO Interupt
+	// When it is in the interruption, no new interruption is allowed, ir_en = 0.
+	ir_en = 1;
 	
 
 	always @(posedge clk) begin
@@ -480,13 +505,20 @@ module controller (/*AUTOARG*/
 		if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_exe != addr_rs) && (regw_addr_mem == addr_rs) && (mem_wen == 0) && !reg_stall && wb_data_src_mem)
 			fwd_a= 2'b11;
 		
-		fwd_b= 2'b00;
-		if(wb_wen_exe && (regw_addr_exe != 0) && (regw_addr_exe == addr_rt) && (mem_wen == 0) && !reg_stall)
-			fwd_b= 2'b01;
-		if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_exe != addr_rt) && (regw_addr_mem == addr_rt) && (mem_wen == 0) && !reg_stall && !wb_data_src_mem)
-			fwd_b= 2'b10;
-		if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_exe != addr_rt) && (regw_addr_mem == addr_rt) && (mem_wen == 0) && !reg_stall && wb_data_src_mem)
-			fwd_b= 2'b11;
+		fwd_b= 3'b000;
+		if(cp_oper == EXE_CP_MFC0)
+			//Interupt
+			fwd_b = 3'b110;		
+		else begin
+			if(wb_wen_exe && (regw_addr_exe != 0) && (regw_addr_exe == addr_rt) && (mem_wen == 0) && !reg_stall)
+				fwd_b= 3'b001;
+			if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_exe != addr_rt) && (regw_addr_mem == addr_rt) && (mem_wen == 0) && !reg_stall && !wb_data_src_mem)
+				fwd_b= 3'b010;
+			if(wb_wen_mem && (regw_addr_mem != 0) && (regw_addr_exe != addr_rt) && (regw_addr_mem == addr_rt) && (mem_wen == 0) && !reg_stall && wb_data_src_mem)
+				fwd_b= 3'b011;			
+		end
+
+
 	end
 	
 	always @(posedge clk) begin

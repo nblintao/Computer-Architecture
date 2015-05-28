@@ -25,7 +25,8 @@ module mips_core (
 	output wire [31:0] mem_addr,  // address of memory
 	output wire [31:0] mem_dout,  // data writing to memory
 	input wire [31:0] mem_din,  // data read from memory
-	input wire btn_reset
+	input wire btn_reset,
+    input wire ir_in
 	);
 	
 	// control signals
@@ -112,7 +113,11 @@ module mips_core (
 	 .mem_valid(mem_valid),
 	 .wb_rst(wb_rst),
 	 .wb_en(wb_en),
-	 .wb_valid(wb_valid)
+	 .wb_valid(wb_valid),
+     //Tao. For CP0
+    .cp_oper(cp_oper),//out 2
+    .ir_en(ir_en),//out 1
+
 	);
 	
 	// data path
@@ -175,7 +180,47 @@ module mips_core (
     .ForwardA(fwd_a), 
     .ForwardB(fwd_b), 
     .fwdm(fwd_m),
-	 .pc_src(pc_src)
+	 .pc_src(pc_src),
+    //Tao. For CP0
+    .cp_addr_r(cp_addr_r),//out 5
+    .cp_data_r(cp_data_r),//in 32
+    .cp_data_w(cp_data_w),//out 32
+    .ret_addr(ret_addr),//out 32
+    .jump_en(jump_en),//in 1
+    .jump_addr(jump_addr)//in 32
 	);
-	
+    
+    //Tao. For CP0
+
+    wire [1:0] cp_oper;
+    wire [4:0] cp_addr_r;
+    wire [31:0] cp_data_r;
+    wire [4:0] cp_addr_w;
+    wire [31:0] cp_data_w;
+    wire ir_en;
+    wire [31:0] ret_addr;
+    wire jump_en;
+    wire [31:0] jump_addr;
+
+    assign cp_addr_w = cp_addr_r;
+
+    cp0 CP0(
+    .clk(clk),
+    `ifdef DEBUG
+    .debug_addr(debug_addr),
+    .debug_data(debug_data),
+    `endif
+    .oper(cp_oper),//in
+    .addr_r(cp_addr_r),//in
+    .data_r(cp_data_r),//out
+    .addr_w(cp_addr_w),//in
+    .data_w(cp_data_w),//in
+    .rst(rst),
+    .ir_en(ir_en),//in
+    .ir_in(ir_in),//in
+    .ret_addr(ret_addr),//in
+    .jump_en(jump_en),//out
+    .jump_addr(jump_addr)//out
+    );
+
 endmodule

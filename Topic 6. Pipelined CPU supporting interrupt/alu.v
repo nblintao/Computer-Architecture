@@ -52,13 +52,16 @@ module alu (
 				result = a ^ b;
 			end
 			EXE_ALU_NOR: begin
-				result = ~(a | b);
+				result = ~ (a | b);
 			end
 			EXE_ALU_SLT: begin
-				result = (a < b) ? 1 : 0;
+					result = ($signed(a) < $signed(b)) ? 1 : 0;
 			end
 			EXE_ALU_SLTU: begin
-				result = ($unsigned(a) < $unsigned(b)) ? 1 : 0;
+					result = (a < b) ? 1 : 0;
+			end
+			EXE_ALU_LUI: begin
+				result = b << 16;
 			end
 			EXE_ALU_SLL: begin
 				result = b << a;
@@ -67,20 +70,21 @@ module alu (
 				result = b >> a;
 			end
 			EXE_ALU_SRA: begin
-				result = b >>> a;
+				result = $signed(b) >>> a;
 			end
-			EXE_ALU_SLLV: begin
+			/*EXE_ALU_SLLV: begin
 				result = b << a;
 			end
 			EXE_ALU_SRLV: begin
 				result = b >> a;
 			end
 			EXE_ALU_SRAV: begin
-				result = b >>> a;
+				result = $signed(b) >>> a;
+			end*/
+			EXE_ALU_B:begin
+				result = b;
 			end
-			EXE_ALU_SLTU:begin
-				result = {b[15:0],16'b0};
-			end
+			
 		endcase
 	end
 	
