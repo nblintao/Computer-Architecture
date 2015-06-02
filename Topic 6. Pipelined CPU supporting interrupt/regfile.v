@@ -21,7 +21,8 @@ module regfile (
 	// write channel W
 	input wire en_w,
 	input wire [4:0] addr_w,
-	input wire [31:0] data_w
+	input wire [31:0] data_w,
+	input wire btn_reset
 	);
 	
 	reg [31:0] regfile [1:31];  // $zero is always zero
@@ -30,6 +31,39 @@ module regfile (
 	always @(posedge clk) begin
 		if (en_w && addr_w != 0)
 			regfile[addr_w] <= data_w;
+		if (btn_reset) begin
+			regfile[1] <= 32'b0;
+			regfile[2] <= 32'b0;
+			regfile[3] <= 32'b0;
+			regfile[4] <= 32'b0;
+			regfile[5] <= 32'b0;
+			regfile[6] <= 32'b0;
+			regfile[7] <= 32'b0;
+			regfile[8] <= 32'b0;
+			regfile[9] <= 32'b0;
+			regfile[10] <= 32'b0;
+			regfile[11] <= 32'b0;
+			regfile[12] <= 32'b0;
+			regfile[13] <= 32'b0;
+			regfile[14] <= 32'b0;
+			regfile[15] <= 32'b0;
+			regfile[16] <= 32'b0;
+			regfile[17] <= 32'b0;
+			regfile[18] <= 32'b0;
+			regfile[19] <= 32'b0;
+			regfile[20] <= 32'b0;
+			regfile[21] <= 32'b0;
+			regfile[22] <= 32'b0;
+			regfile[23] <= 32'b0;
+			regfile[24] <= 32'b0;
+			regfile[25] <= 32'b0;
+			regfile[26] <= 32'b0;
+			regfile[27] <= 32'b0;
+			regfile[28] <= 32'b0;
+			regfile[29] <= 32'b0;
+			regfile[30] <= 32'b0;
+			regfile[31] <= 32'b0;
+		end
 	end
 	
 	// read
@@ -44,7 +78,8 @@ module regfile (
 		debug_data <= debug_addr == 0 ? 0 : regfile[debug_addr];
 	end
 	`endif
-	
+
+
 	/*
 	// write
 	always @(negedge clk) begin

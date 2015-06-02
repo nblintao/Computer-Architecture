@@ -134,6 +134,18 @@ module mips_core (
 
 	);
 	
+/*	reg [3:0] count_ir_in = 0;
+	always@(*)begin
+		if(ir_in)
+			count_ir_in = 4'b1111;
+		else if (clk && count_ir_in != 0)
+			count_ir_in = count_ir_in - 1;
+	end
+*/	
+	wire good_ir_in;
+	assign good_ir_in = ir_in;
+	//assign good_ir_in = (count_ir_in != 0);
+	
 	// data path
 	datapath DATAPATH (
 		.clk(clk),
@@ -221,7 +233,7 @@ module mips_core (
     .data_w(cp_data_w),//in
     .rst(rst),
     .ir_en(ir_en),//in
-    .ir_in(ir_in),//in
+    .ir_in(good_ir_in),//in
     .ret_addr(ret_addr),//in
     .jump_en(jump_en),//out
     .jump_addr(jump_addr)//out

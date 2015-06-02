@@ -517,7 +517,7 @@ module controller (/*AUTOARG*/
 		fwd_b= 3'b000;
 		if(cp_oper == EXE_CP_MFC0)
 			//Interupt
-			fwd_b = 3'b110;		
+			fwd_b = 3'b100;		
 		else begin
 			if(wb_wen_exe && (regw_addr_exe != 0) && (regw_addr_exe == addr_rt) && (mem_wen == 0) && !reg_stall)
 				fwd_b= 3'b001;

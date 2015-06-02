@@ -41,7 +41,7 @@ module mips_top (
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
 		AJ_BTNW (.clk(CCLK), .rst(1'b0), .sig_i(BTNW), .sig_o(btn_int));
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(20000), .INIT_VALUE(1))
-		AJBTNN (.clk(CCLK), .rst(1'b0), .sig_i(BTNN), .sig_o(btn_reset));
+		AJ_BTNN (.clk(CCLK), .rst(1'b0), .sig_i(BTNN), .sig_o(btn_reset));
 	`else
 	assign
 		switch = SW,
