@@ -18,6 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "define.vh"
 module cp0(
 	input wire clk, // main clock
 	// debug
@@ -36,9 +37,10 @@ module cp0(
 	input wire ir_en, // interrupt enable
 	input wire ir_in, // external interrupt input
 	input wire [31:0] ret_addr, // target instruction address to store when interrupt occurred
-	output reg jump_en, // force jump enable signal when interrupt authorised or ERET occurred
+	output wire jump_en, // force jump enable signal when interrupt authorised or ERET occurred
 	output reg [31:0] jump_addr // target instruction address to jump to
 	);
+	`include "mips_define.vh"
 	// interrupt determination
 	wire ir;
 	reg ir_wait = 0, ir_valid = 1;
@@ -63,40 +65,43 @@ module cp0(
 	end
 	assign ir = ir_en & ir_wait & ir_valid;
 	
-	always @(posedge clk) begin
-		jump_en = 0;
+	assign jump_en = ir||eret; 
+	/*always @(posedge clk) begin
+		jump_en <= 0;
 		if (ir||eret)
-			jump_en = 1;	
-	end
+			jump_en <= 1;	
+	end*/
 	
-	always @(posedge clk) begin
-		if(ir)
-			EPCR = ret_addr;
-			jump_addr = EHBR;
-	end	
 	
-	always @(posedge clk) begin
-		case(oper)
-			EXE_CP_MFC0: begin	//MFC0
-				case(addr_r)
-					5'b00010: data_r = EPCR;
-					5'b00011: data_r = EHBR;
-					default: data_r = 0;
-				endcase
-			end				
-			EXE_CP_MTC0: begin	//MTC0
-				case(addr_w)
-					5'b00010: EPCR = data_w;
-					5'b00011: EHBR = data_w;
-					default: ;
-				endcase
-			end
-			EXE_CP0_ERET: begin	//ERET
-				eret = 1;
-				jump_addr = EPCR;
-			end
-			default:;
-		endcase
+	always @(*) begin
+		eret <= 0;
+		if(ir)begin
+			EPCR <= ret_addr;
+			jump_addr <= EHBR;
+		end
+		else begin
+			case(oper)
+				EXE_CP_MFC0: begin	//MFC0
+					case(addr_r)
+						5'b00010: data_r <= EPCR;
+						5'b00011: data_r <= EHBR;
+						default: data_r <= 0;
+					endcase
+				end				
+				EXE_CP_MTC0: begin	//MTC0
+					case(addr_w)
+						5'b00010: EPCR <= data_w;
+						5'b00011: EHBR <= data_w;
+						default: ;
+					endcase
+				end
+				EXE_CP0_ERET: begin	//ERET
+					eret <= 1;
+					jump_addr <= EPCR;
+				end
+				default:;
+			endcase
+		end
 	end
 
 endmodule

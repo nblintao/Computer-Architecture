@@ -44,7 +44,6 @@ module sim_mips_top;
 		// Initialize Inputs
 		CCLK = 0;
 		SW = 0;
-		SW[3]=1;
 		BTNN = 0;
 		BTNE = 0;
 		BTNS = 0;
@@ -61,14 +60,6 @@ module sim_mips_top;
 	end
 	
 	initial forever #10 CCLK = ~CCLK;
-	initial forever #20 BTNS = ~BTNS;
-	
-	//always begin
-	//	BTNS=1;
-	//	#10;
-	//	BTNS=0;
-	//	#100;
-	//end
       
 endmodule
 

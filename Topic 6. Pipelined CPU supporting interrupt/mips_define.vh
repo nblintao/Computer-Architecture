@@ -18,7 +18,7 @@ localparam
 	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
 	//EXE_ALU_ROTR   = 10,
 	EXE_ALU_SRA    = 11,
-	EXE_ALU_SLTU   = 12
+	EXE_ALU_SLTU   = 12,
 	//EXE_ALU_SLLV   = 12,
 	EXE_ALU_B =13;
 	//EXE_ALU_SRLV   = 13,  // including ROTRV(set bit 6) and SRAV(set sign)

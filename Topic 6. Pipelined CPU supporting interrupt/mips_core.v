@@ -57,10 +57,23 @@ module mips_core (
 	wire [1:0] pc_src;
 	
 	wire [1:0] fwd_a; // forwarding selection for channel A
-   wire [1:0] fwd_b; // forwarding selection for channel B
+   wire [2:0] fwd_b; // forwarding selection for channel B
    wire fwd_m; // forwarding selection for memory
    wire is_load; // whether current instruction is LW
 	wire is_store; // whether current instruction is SW
+	
+	 wire [1:0] cp_oper;
+    wire [4:0] cp_addr_r;
+    wire [31:0] cp_data_r;
+    wire [4:0] cp_addr_w;
+    wire [31:0] cp_data_w;
+    wire ir_en;
+    wire [31:0] ret_addr;
+    wire jump_en;
+    wire [31:0] jump_addr;
+	 
+	 wire [5:0] debug_addr_1;  // debug address
+	 wire [31:0] debug_data_1;
 	
 	// controller
 	controller CONTROLLER (
@@ -116,7 +129,8 @@ module mips_core (
 	 .wb_valid(wb_valid),
      //Tao. For CP0
     .cp_oper(cp_oper),//out 2
-    .ir_en(ir_en),//out 1
+    .ir_en(ir_en),
+	 .jump_en(jump_en)
 
 	);
 	
@@ -192,23 +206,13 @@ module mips_core (
     
     //Tao. For CP0
 
-    wire [1:0] cp_oper;
-    wire [4:0] cp_addr_r;
-    wire [31:0] cp_data_r;
-    wire [4:0] cp_addr_w;
-    wire [31:0] cp_data_w;
-    wire ir_en;
-    wire [31:0] ret_addr;
-    wire jump_en;
-    wire [31:0] jump_addr;
-
     assign cp_addr_w = cp_addr_r;
 
     cp0 CP0(
     .clk(clk),
     `ifdef DEBUG
-    .debug_addr(debug_addr),
-    .debug_data(debug_data),
+    .debug_addr(debug_addr_1),
+    .debug_data(debug_data_1),
     `endif
     .oper(cp_oper),//in
     .addr_r(cp_addr_r),//in

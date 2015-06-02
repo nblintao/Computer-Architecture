@@ -31,7 +31,7 @@ module datapath (
 	input wire if_en,  // stage enable signal
 	output reg if_valid,  // working flag
 	output reg inst_ren,  // instruction read enable signal
-	output reg [31:0] inst_addr,  // address of instruction needed
+	output wire [31:0] inst_addr,  // address of instruction needed
 	input wire [31:0] inst_data,  // instruction fetched
 	// ID signals
 	input wire id_rst,
@@ -90,7 +90,7 @@ module datapath (
 	
 	reg [31:0] regw_data_wb;
 
-	wire [1:0] pc_src_id;
+	reg [1:0] pc_src_id;
 	wire [1:0] new_pc_src;
 	
 	`include "mips_define.vh"
@@ -104,7 +104,7 @@ module datapath (
 	
 	// IF signals
 	wire [31:0] inst_addr_next;
-	reg [31:0] naive_inst_addr
+	reg [31:0] naive_inst_addr;
 	
 	// ID signals
 	
@@ -148,7 +148,7 @@ module datapath (
 	`ifdef DEBUG
 	wire [31:0] debug_data_reg;
 	reg [31:0] debug_data_signal;
-	
+	reg jump_en_id;
 	
 	
 	
@@ -198,7 +198,7 @@ module datapath (
 		pc_src = 2'b01;
 	end*/
 	
-	assign ret_addr = (pc_src_id!=2'b00)? inst_addr_id : inst_addr ;
+	assign ret_addr = (pc_src!=2'b00)? inst_addr_id : inst_addr ;
 	
 	always @(posedge clk) begin
 		if (if_rst) begin
@@ -218,8 +218,11 @@ module datapath (
 			//inst_addr <= is_branch_mem ? alu_out_mem : inst_addr_next;
 		end
 	end
-
-	assign inst_addr = jump_en ? jump_addr : naive_inst_addr;
+	always @(posedge clk) begin
+		jump_en_id <= jump_en;
+	end
+	
+	assign inst_addr = jump_en_id ? jump_addr : naive_inst_addr;
 	
 	// ID stage
 	always @(posedge clk) begin

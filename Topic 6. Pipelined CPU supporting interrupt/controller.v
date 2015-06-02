@@ -63,9 +63,10 @@ module controller (/*AUTOARG*/
     output reg wb_rst,
     output reg wb_en,
     input wire wb_valid,
-
+	
     output reg [1:0] cp_oper,//out 2
-    output wire ir_en//out 1
+    output wire ir_en,//out 1
+	 input wire jump_en
 );
 
 	`include "mips_define.vh"
@@ -400,7 +401,7 @@ module controller (/*AUTOARG*/
 			end
 			INST_CP0:begin
 				case(inst[25:21])
-					5'b1XXXX: cp_oper = EXE_CP0_ERET;
+					5'b10000: cp_oper = EXE_CP0_ERET;
 					5'b00000: begin
 						cp_oper = EXE_CP_MFC0; 
 						exe_alu_oper = EXE_ALU_B;
@@ -466,11 +467,19 @@ module controller (/*AUTOARG*/
 			//wb_en = 0;
 			exe_rst = 1;
 		end
+		else if (jump_en) begin
+			//if_en = 0;
+			id_rst = 1;
+			//exe_en = 0;
+			//mem_en = 0;
+			//wb_en = 0;
+			//exe_rst = 1;
+		end
 	end
 
 	//TODO Interupt
 	// When it is in the interruption, no new interruption is allowed, ir_en = 0.
-	ir_en = 1;
+	assign ir_en = 1;
 	
 
 	always @(posedge clk) begin
