@@ -136,6 +136,7 @@ module datapath (
 	reg [31:0] inst_addr_next_exe;
 	reg [1:0] exe_a_src_exe;
 	reg [1:0] exe_b_src_exe;
+	reg [4:0] addr_sa_exe;
 	//reg [4:0] regw_addr_exe;
 	
 	// new signal
@@ -322,6 +323,7 @@ module datapath (
 			is_store_exe <= 0;
 			exe_a_src_exe<=0;
 			exe_b_src_exe<=0;
+			addr_sa_exe <= 0;
 		end
 		else if (exe_en) begin
 			exe_valid <= id_valid;
@@ -346,12 +348,13 @@ module datapath (
 			wb_wen_exe <= wb_wen_ctrl;
 			is_load_exe <=is_load;
 			is_store_exe<=is_store;
+			addr_sa_exe <= addr_sa;
 		end
 	end
 	
 	assign opa_exe = exe_a_src_exe[1] ? inst_addr_next_exe/*2*/
 			:exe_a_src_exe[0] ? rs_data_exe/*1*/
-			:{27'b0, addr_sa}/*0*/;
+			:{27'b0, addr_sa_exe}/*0*/;
 
 	// always@(*) begin
 	// 	case(exe_a_src_exe)

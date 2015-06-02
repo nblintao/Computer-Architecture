@@ -55,7 +55,7 @@ module alu (
 				result = ~(a | b);
 			end
 			EXE_ALU_SLT: begin
-				result = (a < b) ? 1 : 0;
+				result = ($signed(a) < $signed(b)) ? 1 : 0;
 			end
 			EXE_ALU_SLTU: begin
 				result = ($unsigned(a) < $unsigned(b)) ? 1 : 0;
@@ -67,7 +67,7 @@ module alu (
 				result = b >> a;
 			end
 			EXE_ALU_SRA: begin
-				result = b >>> a;
+				result = $signed(b) >>> a;
 			end
 			EXE_ALU_SLLV: begin
 				result = b << a;
