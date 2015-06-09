@@ -17,10 +17,11 @@ localparam
 	EXE_ALU_SLL    = 8,
 	EXE_ALU_SRL    = 9,  // including ROTR(set bit 21) and SRA(set sign)
 	//EXE_ALU_ROTR   = 10,
-	EXE_ALU_SRA    = 11,
-	EXE_ALU_SLTU   = 12,
-	//EXE_ALU_SLLV   = 12,
-	EXE_ALU_B =13;
+	EXE_ALU_ADDU   = 10,
+	EXE_ALU_SUBU   = 11,
+	EXE_ALU_SRA    = 12,
+	EXE_ALU_SLTU   = 13,
+	EXE_ALU_B		= 14;
 	//EXE_ALU_SRLV   = 13,  // including ROTRV(set bit 6) and SRAV(set sign)
 	//EXE_ALU_ROTRV  = 14,
 	//EXE_ALU_SRAV   = 15;
@@ -98,9 +99,9 @@ localparam  // bit 31:26 for instruction type
 	INST_XORI       = 6'b001110,
 	INST_LUI        = 6'b001111,
 	INST_CP0        = 6'b010000,  // bit 24:21 for function type when bit 25 is not set, bit 5:0 for co type when bit 25 is set
-	//CP_FUNC_MF     = 4'b0000,
-	//CP_FUNC_MT     = 4'b0100,
-	//CP0_CO_ERET     = 6'b011000,
+	CP_FUNC_MF     = 4'b0000,
+	CP_FUNC_MT     = 4'b0100,
+	CP0_CO_ERET     = 6'b011000,
 	//INST_LB         = 6'b100000,
 	//INST_LH         = 6'b100001,
 	INST_LW         = 6'b100011,
@@ -160,6 +161,5 @@ localparam
 // EXE CP operations
 localparam
 	EXE_CP_NONE = 0,
-	EXE_CP_MFC0 = 1,
-	EXE_CP_MTC0 = 2,
-	EXE_CP0_ERET = 3;
+	EXE_CP_STORE = 1,
+	EXE_CP0_ERET = 2;

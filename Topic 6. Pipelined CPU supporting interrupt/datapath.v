@@ -149,7 +149,7 @@ module datapath (
 	wire [31:0] debug_data_reg;
 	reg [31:0] debug_data_signal;
 	reg jump_en_id;
-	
+	reg [31:0] jump_addr_id;
 	
 	
 	always @(posedge clk) begin
@@ -181,7 +181,9 @@ module datapath (
 			default: debug_data_signal <= 32'hFFFF_FFFF;
 		endcase
 	end
-	
+	always @(posedge clk) begin
+		jump_addr_id <= jump_addr;
+	end
 	assign
 		debug_data = debug_addr[5] ? debug_data_signal : debug_data_reg;
 	`endif
@@ -222,7 +224,7 @@ module datapath (
 		jump_en_id <= jump_en;
 	end
 	
-	assign inst_addr = jump_en_id ? jump_addr : naive_inst_addr;
+	assign inst_addr = jump_en_id ? jump_addr_id : naive_inst_addr;
 	
 	// ID stage
 	always @(posedge clk) begin

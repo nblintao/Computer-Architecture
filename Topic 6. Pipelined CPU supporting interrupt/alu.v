@@ -42,6 +42,12 @@ module alu (
 			EXE_ALU_SUB: begin
 				result = a - b;
 			end
+			EXE_ALU_ADDU: begin
+				result = a + b;
+			end
+			EXE_ALU_SUBU: begin
+				result = a - b;
+			end
 			EXE_ALU_AND: begin
 				result = a & b;
 			end

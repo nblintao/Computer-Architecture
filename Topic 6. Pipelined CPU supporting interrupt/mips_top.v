@@ -19,6 +19,7 @@ module mips_top (
 	wire [3:0] switch;
 	wire btn_reset, btn_step, btn_int;
 	wire disp_prev, disp_next;
+	reg btn_int_prev,real_int;
 	`ifndef SIMULATING
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
 		AJ_SW0 (.clk(CCLK), .rst(1'b0), .sig_i(SW[0]), .sig_o(switch[0]));
@@ -67,7 +68,15 @@ module mips_top (
 		.clk_10m(clk_cpu),
 		.locked(locked)
 		);
-	
+		
+	always @(posedge clk_cpu) begin
+		btn_int_prev <= btn_int;
+	end
+	always @(posedge clk_cpu) begin
+		real_int <= 0;
+		if (~btn_int_prev && btn_int) 
+			real_int <= 1;
+	end
 	//initial begin
 		//rst_count = 0;
 	//end
@@ -160,7 +169,7 @@ module mips_top (
 		.mem_addr(mem_addr),
 		.mem_dout(mem_data_w),
 		.mem_din(mem_data_r),
-		.ir_in(btn_int)
+		.ir_in(real_int)
 		);
 	
 	// IF YOU ARE NOT SURE ABOUT INITIALIZING MEMORY USING 'READMEMH', PLEASE REPLACE BELOW MODULE TO IP CORE

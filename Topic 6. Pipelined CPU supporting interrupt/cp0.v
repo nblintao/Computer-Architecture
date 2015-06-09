@@ -42,57 +42,33 @@ module cp0(
 	);
 	`include "mips_define.vh"
 	// interrupt determination
-	reg ir;
+	wire ir;
 	reg ir_wait = 0, ir_valid = 1;
 	reg eret = 0;
 	reg [31:0] EHBR;
 	reg [31:0] EPCR;
-	// always @(posedge clk) begin
-	// 	if (rst)
-	// 		ir_wait <= 0;
-	// 	else if (ir_in)
-	// 		ir_wait <= 1;
-	// 	else if (eret)
-	// 		ir_wait <= 0;
-	// end
+	initial begin
+		EHBR = 0;
+		EPCR = 0;
+	end
+	always @(posedge clk) begin
+		if (rst)
+			ir_wait <= 0;
+		else if (ir_in)
+			ir_wait <= 1;
+		else if (eret)
+			ir_wait <= 0;
+	end
+	always @(posedge clk) begin
+		if (rst)
+			ir_valid <= 1;
+		else if (eret)
+			ir_valid <= 1;
+		else if (ir)
+			ir_valid <= 0; // prevent exception reenter
+	end
+	assign ir = ir_en & ir_wait & ir_valid;
 	
-	// always @(posedge clk) begin
-	// 	if (rst)
-	// 		ir_valid <= 1;
-	// 	else if (eret)
-	// 		ir_valid <= 1;
-	// 	else if (ir)
-	// 		ir_valid <= 0; // prevent exception reenter
-	// end
-	// assign ir = ir_en & ir_wait & ir_valid;
-
-	reg ir_old, ir_mid_old;
-	always @(negedge clk)begin
-		ir_mid_old <= ir_in;
-		ir_old <= ir_mid_old;
-	end
-
-	reg this_ir_en;
-	initial this_ir_en = 1;
-
-	always @(posedge clk)begin
-		if(ir_old == 0 && ir_in == 1)
-			// ir <= this_ir_en;
-			ir <= 1;
-		else ir <= 0;
-	end
-
-	//assign ir = ir_in; // Bruce force!!!!
-	// `ifdef DEBUG
-	// 	reg int_step_prev;
-		
-	// 	always @(posedge clk) begin
-	// 		int_step_prev <= ir_in;
-	// 	end
-	// `endif
-	// assign ir = ((ir_en) && ~(~int_step_prev && ir_in));
-
-
 	assign jump_en = ir||eret; 
 	/*always @(posedge clk) begin
 		jump_en <= 0;
@@ -103,35 +79,52 @@ module cp0(
 	
 	always @(*) begin
 		eret <= 0;
+		jump_addr <= 0;
 		if(ir)begin
-			EPCR <= ret_addr;
 			jump_addr <= EHBR;
-			// this_ir_en <= 0;
 		end
 		else begin
 			case(oper)
-				EXE_CP_MFC0: begin	//MFC0
+				EXE_CP_NONE: begin	//MFC0
 					case(addr_r)
-						5'b00010: data_r <= EPCR;
-						5'b00011: data_r <= EHBR;
+						CP0_EPCR: data_r <= EPCR;
+						CP0_EHBR: data_r <= EHBR;
 						default: data_r <= 0;
 					endcase
 				end				
-				EXE_CP_MTC0: begin	//MTC0
+				/*EXE_CP_STORE: begin	//MTC0
 					case(addr_w)
-						5'b00010: EPCR <= data_w;
-						5'b00011: EHBR <= data_w;
+						CP0_EPCR: EPCR <= data_w;
+						CP0_EHBR: EHBR <= data_w;
 						default: ;
 					endcase
-				end
+				end*/
 				EXE_CP0_ERET: begin	//ERET
 					eret <= 1;
 					jump_addr <= EPCR;
-					// this_ir_en <= 1;
 				end
 				default:;
 			endcase
 		end
 	end
+	
+	always @(posedge clk) begin
+	
+		if(ir)begin
+			EPCR <= ret_addr;
+		end
+		else begin
+			case(oper)
+				EXE_CP_STORE: begin	//MTC0
+					case(addr_w)
+						CP0_EPCR: EPCR <= data_w;
+						CP0_EHBR: EHBR <= data_w;
+						default: ;
+					endcase
+				end
+			endcase
+		end
+	end
+
 
 endmodule

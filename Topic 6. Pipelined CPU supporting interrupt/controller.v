@@ -65,7 +65,7 @@ module controller (/*AUTOARG*/
     input wire wb_valid,
 	
     output reg [1:0] cp_oper,//out 2
-    output wire ir_en,//out 1
+    output reg ir_en,//out 1
 	 input wire jump_en
 );
 
@@ -78,7 +78,9 @@ module controller (/*AUTOARG*/
 	reg reg_stall;  // stall signal when LW instruction followed by an related R instruction
 	reg AFromExLW,BFromExLW;
 	wire [4:0] addr_rs, addr_rt;
-	
+	initial begin
+		ir_en <= 1;
+	end
 	assign
 		addr_rs = inst[25:21],
 		addr_rt = inst[20:16];
@@ -151,7 +153,7 @@ module controller (/*AUTOARG*/
 						exe_a_src = 0;
 					end
 					R_FUNC_ADDU:begin
-						exe_alu_oper = EXE_ALU_ADD;
+						exe_alu_oper = EXE_ALU_ADDU;
 						wb_addr_src = WB_ADDR_RD;
 						wb_data_src = WB_DATA_ALU;
 						wb_wen = 1;
@@ -160,7 +162,7 @@ module controller (/*AUTOARG*/
 						exe_a_src = 0;
 					end
 					R_FUNC_SUBU:begin
-						exe_alu_oper = EXE_ALU_SUB;
+						exe_alu_oper = EXE_ALU_SUBU;
 						wb_addr_src = WB_ADDR_RD;
 						wb_data_src = WB_DATA_ALU;
 						wb_wen = 1;
@@ -294,7 +296,7 @@ module controller (/*AUTOARG*/
 				imm_ext = 1;
 				exe_b_src = EXE_B_IMM;
 				exe_a_src = 0;
-				exe_alu_oper = EXE_ALU_ADD;
+				exe_alu_oper = EXE_ALU_ADDU;
 				wb_addr_src = WB_ADDR_RT;
 				wb_data_src = WB_DATA_ALU;
 				wb_wen = 1;
@@ -400,10 +402,58 @@ module controller (/*AUTOARG*/
 				wb_wen = 1;
 			end
 			INST_CP0:begin
-				case(inst[25:21])
+				case(inst[25])
+					0:
+						case(inst[24:21])
+						CP_FUNC_MF:begin
+							cp_oper = EXE_CP_NONE; 
+							exe_alu_oper = EXE_ALU_B;
+								// rt_used = 1;
+							wb_addr_src = WB_ADDR_RT;
+							wb_data_src = WB_DATA_ALU;
+							wb_wen = 1;
+						end
+						CP_FUNC_MT: begin
+							cp_oper = EXE_CP_STORE;
+							rt_used = 1;
+						end
+						default:;
+					endcase
+					1:
+						case(inst[5:0])
+						CP0_CO_ERET: cp_oper = EXE_CP0_ERET;
+						default:;
+						endcase
+				endcase
+			end
+				/*if(inst[25]) begin
+					case(inst[24:21]) 
+						CP_FUNC_MF:begin
+							cp_oper = EXE_CP_NONE; 
+							exe_alu_oper = EXE_ALU_B;
+								// rt_used = 1;
+							wb_addr_src = WB_ADDR_RT;
+							wb_data_src = WB_DATA_ALU;
+							wb_wen = 1;
+						end
+						CP_FUNC_MT: begin
+							cp_oper = EXE_CP_STORE;
+							rt_used = 1;
+						end
+						default:;
+					endcase
+				end
+				else begin
+					case(inst[5:0])
+						CP0_CO_ERET: cp_oper = EXE_CP0_ERET;
+						default:;
+					endcase
+				end
+			end*/
+				/*case(inst[25:21])
 					5'b10000: cp_oper = EXE_CP0_ERET;
 					5'b00000: begin
-						cp_oper = EXE_CP_MFC0; 
+						cp_oper = EXE_CP_NONE; 
 						exe_alu_oper = EXE_ALU_B;
 						// rt_used = 1;
 						wb_addr_src = WB_ADDR_RT;
@@ -411,11 +461,12 @@ module controller (/*AUTOARG*/
 						wb_wen = 1;
 					end
 					5'b00100: begin
-						cp_oper = EXE_CP_MTC0;
+						cp_oper = EXE_CP_STORE;
 						rt_used = 1;
 					end
 				endcase 
-			end
+			end*/
+			
 			default: begin
 				unrecognized = 1;
 			end
@@ -479,7 +530,11 @@ module controller (/*AUTOARG*/
 
 	//TODO Interupt
 	// When it is in the interruption, no new interruption is allowed, ir_en = 0.
-	assign ir_en = 1;
+	//assign ir_en = 1;
+	always @(posedge clk) begin
+		if (jump_en)
+			ir_en <= ir_en + 1;
+	end
 	
 
 	always @(posedge clk) begin
@@ -515,7 +570,7 @@ module controller (/*AUTOARG*/
 			fwd_a= 2'b11;
 		
 		fwd_b= 3'b000;
-		if(cp_oper == EXE_CP_MFC0)
+		if(exe_alu_oper == EXE_ALU_B)
 			//Interupt
 			fwd_b = 3'b100;		
 		else begin
