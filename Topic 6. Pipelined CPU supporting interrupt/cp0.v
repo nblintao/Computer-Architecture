@@ -42,29 +42,46 @@ module cp0(
 	);
 	`include "mips_define.vh"
 	// interrupt determination
-	wire ir;
+	reg ir;
 	reg ir_wait = 0, ir_valid = 1;
 	reg eret = 0;
 	reg [31:0] EHBR;
 	reg [31:0] EPCR;
-	always @(posedge clk) begin
-		if (rst)
-			ir_wait <= 0;
-		else if (ir_in && ir_valid)
-			ir_wait <= 1;
-		else if (eret)
-			ir_wait <= 0;
-	end
+	// always @(posedge clk) begin
+	// 	if (rst)
+	// 		ir_wait <= 0;
+	// 	else if (ir_in)
+	// 		ir_wait <= 1;
+	// 	else if (eret)
+	// 		ir_wait <= 0;
+	// end
 	
-	always @(posedge clk) begin
-		if (rst)
-			ir_valid <= 1;
-		else if (eret)
-			ir_valid <= 1;
-		else if (ir)
-			ir_valid <= 0; // prevent exception reenter
+	// always @(posedge clk) begin
+	// 	if (rst)
+	// 		ir_valid <= 1;
+	// 	else if (eret)
+	// 		ir_valid <= 1;
+	// 	else if (ir)
+	// 		ir_valid <= 0; // prevent exception reenter
+	// end
+	// assign ir = ir_en & ir_wait & ir_valid;
+
+	reg ir_old, ir_mid_old;
+	always @(negedge clk)begin
+		ir_mid_old <= ir_in;
+		ir_old <= ir_mid_old;
 	end
-	assign ir = ir_en & ir_wait & ir_valid;
+
+	reg this_ir_en;
+	initial this_ir_en = 1;
+
+	always @(posedge clk)begin
+		if(ir_old == 0 && ir_in == 1)
+			// ir <= this_ir_en;
+			ir <= 1;
+		else ir <= 0;
+	end
+
 	//assign ir = ir_in; // Bruce force!!!!
 	// `ifdef DEBUG
 	// 	reg int_step_prev;
@@ -89,6 +106,7 @@ module cp0(
 		if(ir)begin
 			EPCR <= ret_addr;
 			jump_addr <= EHBR;
+			// this_ir_en <= 0;
 		end
 		else begin
 			case(oper)
@@ -109,6 +127,7 @@ module cp0(
 				EXE_CP0_ERET: begin	//ERET
 					eret <= 1;
 					jump_addr <= EPCR;
+					// this_ir_en <= 1;
 				end
 				default:;
 			endcase

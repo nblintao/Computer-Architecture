@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="35" />
+   <WVObjectSize size="41" />
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -113,21 +113,45 @@
       <obj_property name="ObjectShortName">regw_data_wb[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/ir" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ir</obj_property>
+      <obj_property name="ObjectShortName">ir</obj_property>
+   </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/ir_in" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">ir_in</obj_property>
       <obj_property name="ObjectShortName">ir_in</obj_property>
    </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/good_ir_in" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">good_ir_in</obj_property>
-      <obj_property name="ObjectShortName">good_ir_in</obj_property>
-   </wvobject>
-   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/ir_in" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">ir_in</obj_property>
-      <obj_property name="ObjectShortName">ir_in</obj_property>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/ir_old" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ir_old</obj_property>
+      <obj_property name="ObjectShortName">ir_old</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/oper" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">oper[1:0]</obj_property>
       <obj_property name="ObjectShortName">oper[1:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/EHBR" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">EHBR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">EHBR[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/EPCR" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">EPCR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">EPCR[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/jump_en_id" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">jump_en_id</obj_property>
+      <obj_property name="ObjectShortName">jump_en_id</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/jump_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">jump_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">jump_addr[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/naive_inst_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">naive_inst_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">naive_inst_addr[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/addr_r" type="array" db_ref_id="1">
@@ -162,6 +186,11 @@
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/eret" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">eret</obj_property>
       <obj_property name="ObjectShortName">eret</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/CP0/oper" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oper[1:0]</obj_property>
+      <obj_property name="ObjectShortName">oper[1:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/sim_mips_top/uut/MIPS_CORE/DATAPATH/REGFILE/regfile" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">regfile[1:31,31:0]</obj_property>
