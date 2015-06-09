@@ -50,11 +50,12 @@ module cp0(
 	always @(posedge clk) begin
 		if (rst)
 			ir_wait <= 0;
-		else if (ir_in)
+		else if (ir_in && ir_valid)
 			ir_wait <= 1;
 		else if (eret)
 			ir_wait <= 0;
 	end
+	
 	always @(posedge clk) begin
 		if (rst)
 			ir_valid <= 1;
@@ -63,16 +64,18 @@ module cp0(
 		else if (ir)
 			ir_valid <= 0; // prevent exception reenter
 	end
-	//assign ir = ir_en & ir_wait & ir_valid;
+	assign ir = ir_en & ir_wait & ir_valid;
 	//assign ir = ir_in; // Bruce force!!!!
-	`ifdef DEBUG
-		reg int_step_prev;
+	// `ifdef DEBUG
+	// 	reg int_step_prev;
 		
-		always @(posedge clk) begin
-			int_step_prev <= ir_in;
-		end
-	`endif
-	assign ir = ((ir_en) && ~(~int_step_prev && ir_in));
+	// 	always @(posedge clk) begin
+	// 		int_step_prev <= ir_in;
+	// 	end
+	// `endif
+	// assign ir = ((ir_en) && ~(~int_step_prev && ir_in));
+
+
 	assign jump_en = ir||eret; 
 	/*always @(posedge clk) begin
 		jump_en <= 0;
