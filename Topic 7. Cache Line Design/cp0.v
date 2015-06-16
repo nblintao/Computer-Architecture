@@ -47,34 +47,35 @@ module cp0(
 	reg eret = 0;
 	reg [31:0] EHBR;
 	reg [31:0] EPCR;
+	reg [31:0] TCR;
+	reg eret_prv;
 	initial begin
 		EHBR = 0;
 		EPCR = 0;
+		TCR = 0;
 	end
 	always @(posedge clk) begin
 		if (rst)
 			ir_wait <= 0;
 		else if (ir_in)
 			ir_wait <= 1;
-		else if (eret)
+		else if (eret && ~eret_prv)
 			ir_wait <= 0;
 	end
 	always @(posedge clk) begin
 		if (rst)
 			ir_valid <= 1;
-		else if (eret)
+		else if (eret && ~eret_prv)
 			ir_valid <= 1;
 		else if (ir)
 			ir_valid <= 0; // prevent exception reenter
 	end
 	assign ir = ir_en & ir_wait & ir_valid;
 	
-	assign jump_en = ir||eret; 
-	/*always @(posedge clk) begin
-		jump_en <= 0;
-		if (ir||eret)
-			jump_en <= 1;	
-	end*/
+	assign jump_en = ir||(eret && ~eret_prv); 
+	always @(posedge clk) begin
+			eret_prv <= eret;	
+	end
 	
 	
 	always @(*) begin
@@ -89,6 +90,7 @@ module cp0(
 					case(addr_r)
 						CP0_EPCR: data_r <= EPCR;
 						CP0_EHBR: data_r <= EHBR;
+						CP0_TCR: data_r <= TCR;
 						default: data_r <= 0;
 					endcase
 				end				
@@ -109,7 +111,7 @@ module cp0(
 	end
 	
 	always @(posedge clk) begin
-	
+		TCR <= TCR + 1;
 		if(ir)begin
 			EPCR <= ret_addr;
 		end
@@ -119,6 +121,7 @@ module cp0(
 					case(addr_w)
 						CP0_EPCR: EPCR <= data_w;
 						CP0_EHBR: EHBR <= data_w;
+						CP0_TCR: TCR <= data_w;
 						default: ;
 					endcase
 				end

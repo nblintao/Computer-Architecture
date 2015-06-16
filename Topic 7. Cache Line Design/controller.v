@@ -66,7 +66,8 @@ module controller (/*AUTOARG*/
 	
     output reg [1:0] cp_oper,//out 2
     output reg ir_en,//out 1
-	 input wire jump_en
+	 input wire jump_en,
+	 input wire inst_stall
 );
 
 	`include "mips_define.vh"
@@ -510,6 +511,13 @@ module controller (/*AUTOARG*/
 			wb_en = 0;
 		end
 		`endif
+		else if (inst_stall) begin
+			if_en = 0;
+			id_en = 0;
+			exe_rst = 1;
+			//mem_rst = 1;
+			//wb_rst = 1;
+		end
 		else if (reg_stall) begin
 			if_en = 0;
 			id_en = 0;

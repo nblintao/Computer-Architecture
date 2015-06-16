@@ -30,7 +30,7 @@ module datapath (
 	input wire if_rst,  // stage reset signal
 	input wire if_en,  // stage enable signal
 	output reg if_valid,  // working flag
-	output reg inst_ren,  // instruction read enable signal
+	output wire inst_ren,  // instruction read enable signal
 	output wire [31:0] inst_addr,  // address of instruction needed
 	input wire [31:0] inst_data,  // instruction fetched
 	// ID signals
@@ -201,16 +201,16 @@ module datapath (
 	end*/
 	
 	assign ret_addr = (pc_src!=2'b00)? inst_addr_id : inst_addr ;
-	
+	assign inst_ren = ~ if_rst;
 	always @(posedge clk) begin
 		if (if_rst) begin
 			if_valid <= 0;
-			inst_ren <= 0;
+			//inst_ren <= 0;
 			naive_inst_addr <= 0;
 		end
 		else if (if_en) begin
 			if_valid <= 1;
-			inst_ren <= 1;
+			//inst_ren <= 1;
 			case (pc_src)
 				2'b00: naive_inst_addr <= inst_addr_next;
 				2'b01: naive_inst_addr <= {inst_addr_next_id[31:28],inst_data_ctrl[25:0],2'b0};
@@ -219,6 +219,8 @@ module datapath (
 			endcase
 			//inst_addr <= is_branch_mem ? alu_out_mem : inst_addr_next;
 		end
+		if (jump_en_id)
+			naive_inst_addr <= jump_addr_id;
 	end
 	always @(posedge clk) begin
 		jump_en_id <= jump_en;

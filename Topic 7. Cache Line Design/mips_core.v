@@ -19,6 +19,7 @@ module mips_core (
 	output wire inst_ren,  // instruction read enable signal
 	output wire [31:0] inst_addr,  // address of instruction needed
 	input wire [31:0] inst_data,  // instruction fetched
+	input wire inst_stall,
 	// memory interfaces
 	output wire mem_ren,  // memory read enable signal
 	output wire mem_wen,  // memory write enable signal
@@ -130,8 +131,8 @@ module mips_core (
      //Tao. For CP0
     .cp_oper(cp_oper),//out 2
     .ir_en(ir_en),
-	 .jump_en(jump_en)
-
+	 .jump_en(jump_en),
+	 .inst_stall(inst_stall)
 	);
 	
 	// data path

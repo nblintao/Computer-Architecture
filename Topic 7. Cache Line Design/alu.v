@@ -37,10 +37,10 @@ module alu (
 				result = adder_result;
 			end*/
 			EXE_ALU_ADD: begin
-				result = a + b;
+				result = $signed(a) + $signed(b);
 			end
 			EXE_ALU_SUB: begin
-				result = a - b;
+				result = $signed(a) - $signed(b);
 			end
 			EXE_ALU_ADDU: begin
 				result = a + b;
