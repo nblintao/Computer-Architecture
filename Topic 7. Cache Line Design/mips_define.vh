@@ -165,3 +165,13 @@ localparam
 	EXE_CP_STORE = 1,
 	EXE_CP0_ERET = 2;
 	
+localparam
+	LINE_NUM = 64,
+	WORD_BITS = 32,
+	ADDR_BITS = 32,
+	TAG_BITS = 22,
+	LINE_WORDS_WIDTH = 2,
+	WORD_BYTES_WIDTH = 2,
+	LINE_WORDS = 4;
+
+	
