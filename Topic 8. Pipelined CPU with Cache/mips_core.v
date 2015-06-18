@@ -26,7 +26,7 @@ module mips_core (
 	output wire [31:0] mem_addr,  // address of memory
 	output wire [31:0] mem_dout,  // data writing to memory
 	input wire [31:0] mem_din,  // data read from memory
-	input wire btn_reset,
+	input wire mem_stall,  // data read/write stall
     input wire ir_in
 	);
 	
@@ -132,7 +132,8 @@ module mips_core (
     .cp_oper(cp_oper),//out 2
     .ir_en(ir_en),
 	 .jump_en(jump_en),
-	 .inst_stall(inst_stall)
+	 .inst_stall(inst_stall),
+	 .mem_stall(mem_stall)
 	);
 	
 	// data path
@@ -179,7 +180,7 @@ module mips_core (
 		.wb_rst(wb_rst),
 		.wb_en(wb_en),
 		.wb_valid(wb_valid),
-		.btn_reset(btn_reset),
+		.btn_reset(rst),
 	 .rs_rt_equal(rs_rt_equal), 
     .mem_ren_exe(is_load_exe), 
     .mem_wen_exe(is_store_exe), 
