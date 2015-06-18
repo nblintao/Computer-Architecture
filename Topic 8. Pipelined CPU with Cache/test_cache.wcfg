@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="E:/___My_Work___/3rd/CA/Lab7/mips_cpu/cache_tbw_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="cache_tbw" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/cache_tbw/hit" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">hit</obj_property>
+      <obj_property name="ObjectShortName">hit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/dout" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/valid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">valid</obj_property>
+      <obj_property name="ObjectShortName">valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/dirty" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">dirty</obj_property>
+      <obj_property name="ObjectShortName">dirty</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/tag" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">tag[21:0]</obj_property>
+      <obj_property name="ObjectShortName">tag[21:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/load" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">load</obj_property>
+      <obj_property name="ObjectShortName">load</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/edit" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">edit</obj_property>
+      <obj_property name="ObjectShortName">edit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/invalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">invalid</obj_property>
+      <obj_property name="ObjectShortName">invalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cache_tbw/din" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">din[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+</wave_config>
