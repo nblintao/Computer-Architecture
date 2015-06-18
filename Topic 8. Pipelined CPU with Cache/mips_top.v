@@ -20,6 +20,16 @@ module mips_top (
 	wire btn_reset, btn_step, btn_int;
 	wire disp_prev, disp_next;
 	reg btn_int_prev,real_int;
+	wire inst_mem_cs,inst_mem_we;
+	wire [31:0]inst_mem_addr;
+	wire [31:0]inst_mem_dout;
+	wire [31:0]inst_mem_din;
+	wire inst_mem_ack;
+	wire data_mem_cs,data_mem_we;
+	wire [31:0]data_mem_addr;
+	wire [31:0]data_mem_dout;
+	wire [31:0]data_mem_din;
+	wire data_mem_ack;
 	`ifndef SIMULATING
 	anti_jitter #(.CLK_FREQ(50), .JITTER_MAX(10000), .INIT_VALUE(0))
 		AJ_SW0 (.clk(CCLK), .rst(1'b0), .sig_i(SW[0]), .sig_o(switch[0]));
@@ -175,6 +185,23 @@ module mips_top (
 		.ir_in(real_int)
 		);
 	
+	cmu INST_CMU (
+		.clk(clk_cpu),
+		.rst(rst_all),
+		.addr_rw(inst_addr),
+		.en_r(inst_ren),
+		.data_r(inst_data),
+		.en_w(1'b0),
+		.data_w(0),
+		.stall(inst_stall),
+		.mem_cs_o(inst_mem_cs),
+		.mem_we_o(inst_mem_we),
+		.mem_addr_o(inst_mem_addr),
+		.mem_data_i(inst_mem_dout),
+		.mem_data_o(inst_mem_din),
+		.mem_ack_i(inst_mem_ack)
+		);
+	
 	// IF YOU ARE NOT SURE ABOUT INITIALIZING MEMORY USING 'READMEMH', PLEASE REPLACE BELOW MODULE TO IP CORE
 	inst_rom #(
 		.ADDR_WIDTH(6),
@@ -185,12 +212,28 @@ module mips_top (
 		//.addr(0),
 		.addr({2'b0, inst_addr[31:2]}),
 		//.addr(inst_addr),
-		.ren(inst_ren),
-		.inst(inst_data),
-		.stall(inst_stall),
-		.ack()
+		.ren(inst_mem_cs & ~inst_mem_we),
+		.inst(inst_mem_dout),
+		.stall(),
+		.ack(inst_mem_ack)
 		);
 
+	cmu DATA_CMU (
+		.clk(clk_cpu),
+		.rst(rst_all),
+		.addr_rw(mem_addr),
+		.en_r(mem_ren),
+		.data_r(mem_data_r),
+		.en_w(mem_wen),
+		.data_w(mem_data_w),
+		.stall(mem_stall),
+		.mem_cs_o(data_mem_cs),
+		.mem_we_o(data_mem_we),
+		.mem_addr_o(data_mem_addr),
+		.mem_data_i(data_mem_dout),
+		.mem_data_o(data_mem_din),
+		.mem_ack_i(data_mem_ack)
+		);
 	
 	// IF YOU ARE NOT SURE ABOUT INITIALIZING MEMORY USING 'READMEMH', PLEASE REPLACE BELOW MODULE TO IP CORE
 	data_ram #(
@@ -199,14 +242,13 @@ module mips_top (
 		) DATA_RAM (
 		.clk(clk_cpu),
 		.rst(rst_all),
-		.addr({2'b0, mem_addr[31:2]}),
-		//.addr(mem_addr),
-		.ren(mem_ren),
-		.wen(mem_wen),
-		.din(mem_data_w),
-		.dout(mem_data_r),
-		.stall(mem_stall),
-		.ack()
+		.addr({2'b0, data_mem_addr[31:2]}),
+		.ren(data_mem_cs & ~data_mem_we),
+		.wen(data_mem_cs & data_mem_we),
+		.din(data_mem_din),
+		.dout(data_mem_dout),
+		.stall(),
+		.ack(data_mem_ack)
 		);
 	
 endmodule
