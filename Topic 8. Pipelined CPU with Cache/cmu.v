@@ -1,20 +1,61 @@
-`include "define.vh"
+`include "mips_define.vh"
 
 module cmu(
-	input wire [31:0] addr_rw,
-	input wire en_r,
-	input wire en_w,
-	input wire [31:0] data_w,
-	input wire [31:0] mem_data_syn,
-	input wire []
-	output reg [31:0] data_r,
-	output reg busy,
-	output reg mem_cs_o,
-	output reg mem_we_o,
-	output reg [31:0] mem_addr_o
-	)
+input wire clk,
+input wire rst,
+input wire [31:0] addr_rw,
+input wire en_r,
+output wire [31:0] data_r,
+input wire en_w,
+input wire [31:0] data_w,
+output reg stall,
+output reg mem_cs_o,
+output reg mem_we_o,
+output reg [31:0] mem_addr_o,
+input wire [31:0] mem_data_i,
+output reg [31:0] mem_data_o,
+input wire mem_ack_i
+	// input wire [31:0] mem_data_syn,
+	// input wire []
+	// output reg [31:0] data_r,
+	// output reg busy,
+	// output reg [31:0] mem_addr_o
+	);
+wire [31:0] mem_data_syn;
+wire busy;
+assign mem_data_syn = mem_data_i;
+assign busy = stall;
+
+
+reg [31:0] cache_addr;
+reg cache_edit;
+reg [31:0] cache_din;
+reg cache_store;
+assign cache_dout = data_r;
+
+cache_line CACHELINE(
+.clk(clk),
+.rst(rst),
+.addr(cache_addr), // [31:0] 
+.load(cache_store),
+.edit(cache_edit),
+.invalid(1'b0),
+.din(cache_din), // [31:0] 
+
+.hit(cache_hit),
+.dout(cache_dout), // [31:0] 
+.valid(cache_valid),
+.dirty(cache_dirty),
+.tag(cache_tag) // [21:0] 
+);
+
+reg [2:0] state;
+reg [2:0] next_state;
+reg [LINE_WORDS_WIDTH-1:0] word_count;
+reg [LINE_WORDS_WIDTH-1:0] next_word_count;
 
 always @(posedge clk) begin
+	case(state)
 	S_IDLE: begin
 		if (en_r || en_w) begin
 			if (cache_hit)
@@ -29,7 +70,7 @@ always @(posedge clk) begin
 			next_word_count = word_count + 1'h1;
 		else 
 			next_word_count = word_count;
-		end
+
 		if (mem_ack_i && word_count == {LINE_WORDS_WIDTH{1'b1}})
 			next_state = S_BACK_WAIT;
 		else
@@ -56,6 +97,7 @@ always @(posedge clk) begin
 		next_word_count <= 0;
 		next_state <= S_IDLE; 
 	end
+	endcase
 end
 
 always @(posedge clk) begin
@@ -79,7 +121,6 @@ always @(posedge clk) begin
 		end
 		S_FILL, S_FILL_WAIT: begin
 			cache_addr = {addr_rw[31:LINE_WORDS_WIDTH+2], word_count_buf, 2'b00};
-			cache_addr = {addr_rw[31:LINE_WORDS_WIDTH+2], word_count_buf,
 			cache_din = mem_data_syn; 
 			cache_store = mem_ack_syn;
 		end 
@@ -103,3 +144,5 @@ always @(posedge clk) begin
 	end 
 endcase
 end
+
+endmodule

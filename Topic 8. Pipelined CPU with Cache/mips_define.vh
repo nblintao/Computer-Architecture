@@ -173,5 +173,10 @@ localparam
 	LINE_WORDS_WIDTH = 2,
 	WORD_BYTES_WIDTH = 2,
 	LINE_WORDS = 4;
-
 	
+localparam
+	S_IDLE = 0,
+	S_BACK = 1,
+	S_BACK_WAIT = 2,
+	S_FILL = 3,
+	S_FILL_WAIT = 4;
