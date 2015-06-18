@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`include "mips_define.vh"
+
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -33,15 +33,19 @@ module cache_line(
 	output reg dirty,
 	output reg [21:0] tag
 );
+`include "mips_define.vh"
 	reg [LINE_NUM-1:0] inner_valid = 0;
 	reg [LINE_NUM-1:0] inner_dirty = 0;
 	reg [LINE_NUM-1:0] inner_tag [0:LINE_NUM-1];
 	reg [WORD_BITS-1:0] inner_data [0:LINE_NUM*LINE_WORDS-1];
-
+	always @(*) begin
+		dout = inner_data[addr[ADDR_BITS-TAG_BITS-1:WORD_BYTES_WIDTH]];
+		valid = inner_valid[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
+		dirty = inner_dirty[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
+		tag = inner_tag[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
+		hit = valid & tag==addr[ADDR_BITS-1:ADDR_BITS-TAG_BITS];
+	end
 	always @(posedge clk) begin
-		dout <= inner_data[addr[ADDR_BITS-TAG_BITS-1:WORD_BYTES_WIDTH]];
-		if (edit&hit || load)
-			inner_data[addr[ADDR_BITS-TAG_BITS-1:WORD_BYTES_WIDTH]] = din;
 		
 		if (invalid) begin
 			inner_valid[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]] = 0;
@@ -59,10 +63,10 @@ module cache_line(
 			inner_tag[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]] = addr[ADDR_BITS-1:ADDR_BITS-TAG_BITS];
 		end
 
-		valid = inner_valid[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
-		dirty = inner_dirty[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
-		tag = inner_tag[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
-		hit = valid & tag==addr[ADDR_BITS-1:ADDR_BITS-TAG_BITS];
+		if (edit&hit || load)
+			inner_data[addr[ADDR_BITS-TAG_BITS-1:WORD_BYTES_WIDTH]] = din;
+
 	end
-	
+
+
 endmodule

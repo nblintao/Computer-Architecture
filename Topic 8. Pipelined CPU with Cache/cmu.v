@@ -1,5 +1,3 @@
-`include "mips_define.vh"
-
 module cmu(
 input wire clk,
 input wire rst,
@@ -21,17 +19,29 @@ input wire mem_ack_i
 	// output reg busy,
 	// output reg [31:0] mem_addr_o
 	);
+`include "mips_define.vh"
+	
 wire [31:0] mem_data_syn;
-wire busy;
+// wire busy;
 assign mem_data_syn = mem_data_i;
-assign busy = stall;
+assign mem_ack_syn = mem_ack_i;
+// assign stall = busy;
 
+// assign stall = (state != S_IDLE)?1:0;
+always @(*)begin
+	// if(state!=S_IDLE)
+	if(!cache_hit || (state !=S_IDLE))
+		stall = 1;
+	else
+		stall = 0;
+end
 
 reg [31:0] cache_addr;
 reg cache_edit;
 reg [31:0] cache_din;
 reg cache_store;
-assign cache_dout = data_r;
+wire [31:0] cache_dout;
+assign data_r = cache_dout;
 
 cache_line CACHELINE(
 .clk(clk),
@@ -53,6 +63,12 @@ reg [2:0] state;
 reg [2:0] next_state;
 reg [LINE_WORDS_WIDTH-1:0] word_count;
 reg [LINE_WORDS_WIDTH-1:0] next_word_count;
+reg [LINE_WORDS_WIDTH-1:0] word_count_buf;
+initial state = S_IDLE;
+
+always@(posedge clk)begin
+	word_count_buf <= word_count;
+end
 
 always @(posedge clk) begin
 	case(state)
@@ -104,12 +120,15 @@ always @(posedge clk) begin
 	if (rst) begin
 		state <= 0;
 		word_count <= 0;
+		next_word_count <= 0;//
 	end
 	else begin
 		state <= next_state;
 		word_count <= next_word_count; 
 	end
+end
 
+always @(*) begin
 	case (next_state) 
 		S_IDLE: begin
 			cache_addr = addr_rw; 
@@ -120,6 +139,7 @@ always @(posedge clk) begin
 			cache_addr = {addr_rw[31:LINE_WORDS_WIDTH+2], next_word_count, 2'b00};
 		end
 		S_FILL, S_FILL_WAIT: begin
+			// cache_addr = {addr_rw[31:LINE_WORDS_WIDTH+2], next_word_count, 2'b00};
 			cache_addr = {addr_rw[31:LINE_WORDS_WIDTH+2], word_count_buf, 2'b00};
 			cache_din = mem_data_syn; 
 			cache_store = mem_ack_syn;

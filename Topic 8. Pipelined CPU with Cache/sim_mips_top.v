@@ -58,7 +58,7 @@ module sim_mips_top;
 		// Add stimulus here
 		
 		#5000;
-		BTNW = 1;
+/*		BTNW = 1;
 		#200;
 		BTNW = 0;
 		#2000;
@@ -80,7 +80,7 @@ module sim_mips_top;
 		#4000;
 		BTNW = 1;
 		#200;
-		BTNW = 0;
+		BTNW = 0;*/
 
 	end
  	initial forever #20 CCLK = ~CCLK;      
