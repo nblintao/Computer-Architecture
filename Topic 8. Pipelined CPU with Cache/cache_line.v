@@ -38,7 +38,7 @@ module cache_line(
 	reg [LINE_NUM-1:0] inner_dirty = 0;
 	reg [LINE_NUM-1:0] inner_tag [0:LINE_NUM-1];
 	reg [WORD_BITS-1:0] inner_data [0:LINE_NUM*LINE_WORDS-1];
-	always @(*) begin
+	always @(negedge clk) begin
 		dout = inner_data[addr[ADDR_BITS-TAG_BITS-1:WORD_BYTES_WIDTH]];
 		valid = inner_valid[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];
 		dirty = inner_dirty[addr[ADDR_BITS-TAG_BITS-1:LINE_WORDS_WIDTH+WORD_BYTES_WIDTH]];

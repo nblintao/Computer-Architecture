@@ -1,27 +1,5 @@
 `timescale 1ns / 1ps
 
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   21:36:31 06/15/2015
-// Design Name:   cache_line
-// Module Name:   E:/___My_Work___/3rd/CA/Lab7/mips_cpu/code/cache_tbw.v
-// Project Name:  mips_cpu
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: cache_line
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
-
 module cache_tbw;
 
 	// Inputs

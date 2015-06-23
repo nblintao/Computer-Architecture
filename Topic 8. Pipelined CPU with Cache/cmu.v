@@ -28,20 +28,17 @@ assign mem_ack_syn = mem_ack_i;
 // assign stall = busy;
 
 // assign stall = (state != S_IDLE)?1:0;
-always @(*)begin
-	// if(state!=S_IDLE)
-	if(!cache_hit || (state !=S_IDLE))
-		stall = 1;
-	else
-		stall = 0;
-end
+
 
 reg [31:0] cache_addr;
 reg cache_edit;
 reg [31:0] cache_din;
 reg cache_store;
 wire [31:0] cache_dout;
-assign data_r = cache_dout;
+
+initial begin
+    cache_edit = 0;
+end
 
 cache_line CACHELINE(
 .clk(clk),
@@ -64,12 +61,22 @@ reg [2:0] next_state;
 reg [LINE_WORDS_WIDTH-1:0] word_count;
 reg [LINE_WORDS_WIDTH-1:0] next_word_count;
 reg [LINE_WORDS_WIDTH-1:0] word_count_buf;
+reg mem_ack_i_pre;
+wire mem_ack_i_real;
+assign data_r = {32{((state==S_IDLE)&cache_hit)}}&cache_dout;
 initial state = S_IDLE;
-
+always @(*)begin
+	// if(state!=S_IDLE)
+	if(!cache_hit || (state !=S_IDLE))
+		stall = 1;
+	else
+		stall = 0;
+end
 always@(posedge clk)begin
 	word_count_buf <= word_count;
+	mem_ack_i_pre <= mem_ack_i;
 end
-
+assign mem_ack_i_real = (~mem_ack_i_pre) & mem_ack_i;
 always @(posedge clk) begin
 	case(state)
 	S_IDLE: begin
@@ -82,12 +89,12 @@ always @(posedge clk) begin
 	end	
 
 	S_BACK: begin
-		if (mem_ack_i)
+		if (mem_ack_i_real)
 			next_word_count = word_count + 1'h1;
 		else 
 			next_word_count = word_count;
 
-		if (mem_ack_i && word_count == {LINE_WORDS_WIDTH{1'b1}})
+		if (mem_ack_i_real && word_count == {LINE_WORDS_WIDTH{1'b1}})
 			next_state = S_BACK_WAIT;
 		else
 			next_state = S_BACK;
@@ -99,34 +106,33 @@ always @(posedge clk) begin
 	end	
 
 	S_FILL: begin
-		if (mem_ack_i)
+		if (mem_ack_i_real)
 			next_word_count = word_count + 1'h1; 
 		else
 			next_word_count = word_count;
-		if (mem_ack_i && word_count == {LINE_WORDS_WIDTH{1'b1}})
+		if (mem_ack_i_real && word_count == {LINE_WORDS_WIDTH{1'b1}})
 			next_state = S_FILL_WAIT; 
 		else
 			next_state = S_FILL;
 	end	
 
 	S_FILL_WAIT: begin
-		next_word_count <= 0;
-		next_state <= S_IDLE; 
+		next_word_count = 0;
+		next_state = S_IDLE; 
 	end
 	endcase
-end
-
-always @(posedge clk) begin
 	if (rst) begin
 		state <= 0;
 		word_count <= 0;
-		next_word_count <= 0;//
+		next_word_count = 0;//
 	end
 	else begin
 		state <= next_state;
 		word_count <= next_word_count; 
 	end
 end
+
+
 
 always @(*) begin
 	case (next_state) 
@@ -160,7 +166,7 @@ always @(*) begin
 		S_FILL: begin
 			mem_cs_o <= 1;
 			mem_we_o <= 0;
-			mem_addr_o <= {addr_rw[31:LINE_WORDS_WIDTH+2], next_word_count, 2'b00};
+			mem_addr_o <= {addr_rw[31:LINE_WORDS_WIDTH+2], word_count_buf, 2'b00};
 	end 
 endcase
 end
